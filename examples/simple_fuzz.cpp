@@ -1,4 +1,4 @@
-#include "test/test.hpp"
+#include "valfuzz/valfuzz.hpp"
 
 FUZZME(a_function, int a, int b)
 {

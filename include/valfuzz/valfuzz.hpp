@@ -3,71 +3,86 @@
 #include <any>
 #include <functional>
 #include <iostream>
+#include <string>
 #include <tuple>
 #include <type_traits>
 #include <typeinfo>
+#include <utility>
 #include <vector>
 
 /* Assertions */
 
+namespace valfuzz
+{
+
 #define ASSERT(cond)                                                           \
     if (!(cond))                                                               \
     {                                                                          \
-        std::cerr << "Assertion failed: " << #cond << std::endl;               \
+        std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";   \
+        std::cerr << "Assertion failed:" << #cond << std::endl;                \
     }
 
 #define ASSERT_EQ(a, b)                                                        \
     if ((a) != (b))                                                            \
     {                                                                          \
+        std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";   \
         std::cerr << "Assertion failed: " << #a << " != " << #b << std::endl;  \
     }
 
 #define ASSERT_NE(a, b)                                                        \
     if ((a) == (b))                                                            \
     {                                                                          \
+        std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";   \
         std::cerr << "Assertion failed: " << #a << " == " << #b << std::endl;  \
     }
 
 #define ASSERT_LT(a, b)                                                        \
     if ((a) >= (b))                                                            \
     {                                                                          \
+        std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";   \
         std::cerr << "Assertion failed: " << #a << " < " << #b << std::endl;   \
     }
 
 #define ASSERT_LE(a, b)                                                        \
     if ((a) > (b))                                                             \
     {                                                                          \
+        std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";   \
         std::cerr << "Assertion failed: " << #a << " <= " << #b << std::endl;  \
     }
 
 #define ASSERT_GT(a, b)                                                        \
     if ((a) <= (b))                                                            \
     {                                                                          \
+        std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";   \
         std::cerr << "Assertion failed: " << #a << " > " << #b << std::endl;   \
     }
 
 #define ASSERT_GE(a, b)                                                        \
     if ((a) < (b))                                                             \
     {                                                                          \
+        std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";   \
         std::cerr << "Assertion failed: " << #a << " >= " << #b << std::endl;  \
     }
 
 /* Tests */
 
-extern std::vector<std::function<void()>> registered_tests;
+extern std::vector<std::pair<std::string, std::function<void(std::string)>>>
+    registered_tests;
 
-#define TEST(name)                                                             \
-    void name();                                                               \
+#define TEST(name, pretty_name)                                                \
+    void name(std::string test_name);                                          \
     static struct name##_register                                              \
     {                                                                          \
         name##_register()                                                      \
         {                                                                      \
-            registered_tests.push_back(name);                                  \
+            valfuzz::registered_tests.push_back({pretty_name, name});          \
         }                                                                      \
     } name##_register_instance;                                                \
-    void name()
+    void name(std::string test_name)
 
 /* Fuzzer */
+
+// TODO: register fuzzers
 
 #define FUZZME(fun_name, ...)                                                  \
     template <typename... Args> int fun_name(Args... args)                     \
@@ -103,4 +118,18 @@ template <typename... Args> void get_args(int (*f)(Args...))
     {
         std::cout << t.type().name() << " ";
     }
+
+    // TODO:
+    // Generate random values for each base type
+    // and call the function with them
 }
+
+/* Thread pool */
+
+// TODO:
+// All tests are added to a thread pool for
+// parallel execution. Multithreading can be
+// disabled by an argument in the executable,
+// as the number of threads.
+
+} // namespace valfuzz

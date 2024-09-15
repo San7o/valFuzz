@@ -1,6 +1,6 @@
-#include "test/test.hpp"
+#include "valfuzz/valfuzz.hpp"
 
-TEST(assertion)
+TEST(assertion, "Simple Assertion")
 {
     ASSERT(1 == 1);
     ASSERT_EQ(1, 1);
