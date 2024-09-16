@@ -1,7 +1,6 @@
 # valFuzz
 
 valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library for c++23.
-(currently early in developement).
 
 ## Features
 
@@ -9,7 +8,13 @@ valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library 
 
 - [x] tests
 
-- [ ] parallel execution
+- [x] parallel execution
+
+- [x] toggle verbose
+
+- [ ] arguments settings
+
+- [ ] execute before / after all
 
 - [ ] naive fuzzing
 
@@ -20,6 +25,7 @@ valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library 
 Copy [include/valfuzz/valfuzz.hpp](./include/valfuzz/valfuzz.hpp) and [src/valfuzz.cpp](./src/valfuzz.cpp)
 in your include and source directories respectively, or link to the shared library. You can compile
 a shared or static library with the following flags:
+
 ```bash
 cmake -Bbuild -DVALFUZZ_BUILD_SHARED=ON -DVALFUZZ_BUILD_STATIC=ON
 ```
@@ -33,6 +39,10 @@ TEST(simple, "Simple Assertion") {
     ASSERT(1 == 2);
 }
 ```
+```
+test: Simple Assertion, line: 7, Assertion failed: 1 != 2
+```
+
 The library already contains a main so you just need to define the tests with `TEST`, the first
 argument is the test name, the second one is the name that will be displayed in the output
 when an assertion on the test fails.
