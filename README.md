@@ -13,8 +13,7 @@ Settings:
  - Max threads: 4
  - Verbose: true
 
-Running test: Simple Assertion
-...
+Running 1337 tests...
 ```
 
 valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library for c++23.
@@ -33,7 +32,7 @@ valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library 
 
 - [x] execute before / after all
 
-- [ ] naive fuzzing
+- [x] naive fuzzing
 
 - [ ] genetic fuzzing
 
@@ -91,4 +90,14 @@ AFTER() {
 TEST(a_test, "Another simple test") {
     ASSERT_EQ(1, 1);
 }
+```
+
+## Fuzzing
+The fizzer is not yet implemented, for now 
+you can generate random number of basic types `int`, `double`, `float`, `char` and `string`:
+```c++
+int a = valfuzz::get_random<int>();
+int b = valfuzz::get_random<int>();
+int ret = sum_int(a, b);
+ASSERT_EQ(ret, a + b);
 ```

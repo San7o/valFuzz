@@ -26,30 +26,34 @@
 
 #include "valfuzz/valfuzz.hpp"
 
-#include <print>
-
 namespace valfuzz
 {
 
-auto &get_tests()
+std::deque<test_pair> &get_tests()
 {
     static std::deque<test_pair> registered_tests = {};
     return registered_tests;
 }
 
-auto &get_tests_queue()
+std::deque<fuzz_pair> &get_fuzzs()
+{
+    static std::deque<fuzz_pair> registered_fuzzs = {};
+    return registered_fuzzs;
+}
+
+std::deque<test_pair> &get_tests_queue()
 {
     static std::deque<test_pair> tests_queue = {};
     return tests_queue;
 }
 
-auto &get_function_execute_before()
+std::function<void()> &get_function_execute_before()
 {
     static std::function<void()> function_execute_before = []() {};
     return function_execute_before;
 }
 
-auto &get_function_execute_after()
+std::function<void()> &get_function_execute_after()
 {
     static std::function<void()> function_execute_after = []() {};
     return function_execute_after;
@@ -73,34 +77,34 @@ long unsigned int get_num_tests()
     return tests.size();
 }
 
-auto &get_is_threaded()
+std::atomic<bool> &get_is_threaded()
 {
     constinit static std::atomic<bool> is_threaded = true;
     return is_threaded;
 }
 
-auto &get_thread_pool()
+std::vector<std::thread> &get_thread_pool()
 {
     constinit static std::vector<std::thread> thread_pool;
     return thread_pool;
 }
 
-auto &get_max_num_threads()
+std::atomic<long unsigned int> &get_max_num_threads()
 {
     constinit static std::atomic<long unsigned int> max_num_threads = 4;
     return max_num_threads;
 }
 
-auto &get_verbose()
+std::atomic<bool> &get_verbose()
 {
     constinit static std::atomic<bool> verbose = false;
     return verbose;
 }
 
-auto &get_header()
+std::atomic<bool> &get_header()
 {
-     constinit static std::atomic<bool> header = true;
-     return header;
+    constinit static std::atomic<bool> header = true;
+    return header;
 }
 
 void set_multithreaded(bool is_threaded)
@@ -154,6 +158,12 @@ void add_test_to_queue(const std::string &name, test_function test)
     tests_queue.push_back({name, test});
 }
 
+void add_fuzz_test(const std::string &name, fuzz_function fuzz)
+{
+    auto &fuzzs = get_fuzzs();
+    fuzzs.push_back({name, fuzz});
+}
+
 std::optional<test_pair> pop_test_from_queue_or_null()
 {
     auto &tests_queue = get_tests_queue();
@@ -195,7 +205,8 @@ void run_tests()
                       { add_test_to_queue(test.first, test.second); });
 
         // spawn threads
-        for (long unsigned int i = 0; i < get_max_num_threads() && i < get_num_tests(); i++)
+        for (long unsigned int i = 0;
+             i < get_max_num_threads() && i < get_num_tests(); i++)
         {
             auto &thread_pool = get_thread_pool();
             thread_pool.push_back(std::thread(run_test_parallel));
@@ -207,8 +218,8 @@ void run_tests()
     }
     else
     {
-        std::for_each(tests.begin(), tests.end(), [](auto &test)
-                      { test.second(test.first); });
+        std::for_each(tests.begin(), tests.end(),
+                      [](auto &test) { test.second(test.first); });
     }
 }
 
@@ -242,7 +253,8 @@ void parse_args(int argc, char *argv[])
             std::print("Options:\n");
             std::print("  --no-multithread: run tests in a single thread\n");
             std::print("  --verbose: print test names\n");
-            std::print("  --max-threads <num>: set the maximum number of threads\n");
+            std::print(
+                "  --max-threads <num>: set the maximum number of threads\n");
             std::print("  --no-header: do not print the header at the start\n");
             std::print("  --help: print this help message\n");
             std::exit(0);
@@ -255,14 +267,13 @@ void parse_args(int argc, char *argv[])
     }
 }
 
-char valfuzz_banner[] =
-"             _ _____              \n"
-" __   ____ _| |  ___|   _ ________\n"
-" \\ \\ / / _` | | |_ | | | |_  /_  /\n"
-"  \\ V / (_| | |  _|| |_| |/ / / / \n"
-"   \\_/ \\__,_|_|_|   \\__,_/___/___|\n"
-"                                  \n"
-"A modern testing & fuzzing library for C++\n";
+char valfuzz_banner[] = "             _ _____              \n"
+                        " __   ____ _| |  ___|   _ ________\n"
+                        " \\ \\ / / _` | | |_ | | | |_  /_  /\n"
+                        "  \\ V / (_| | |  _|| |_| |/ / / / \n"
+                        "   \\_/ \\__,_|_|_|   \\__,_/___/___|\n"
+                        "                                  \n"
+                        "A modern testing & fuzzing library for C++\n";
 
 void print_header()
 {
@@ -278,6 +289,44 @@ void print_header()
     std::print("\n");
 }
 
+template <> int get_random<int>()
+{
+    return std::rand();
+}
+
+template <> float get_random<float>()
+{
+    return static_cast<float>(std::rand());
+}
+
+template <> double get_random<double>()
+{
+    double dot =
+        static_cast<double>(std::rand()) / static_cast<double>(RAND_MAX);
+    return static_cast<double>(std::rand()) + dot;
+}
+
+template <> char get_random<char>()
+{
+    return static_cast<char>(std::rand() % 256);
+}
+
+template <> bool get_random<bool>()
+{
+    return static_cast<bool>(std::rand() % 2);
+}
+
+template <> std::string get_random<std::string>()
+{
+    int len = std::rand() % MAX_RANDOM_STRING_LEN;
+    std::string random_string = "";
+    for (int i = 0; i < len; i++)
+    {
+        random_string += get_random<char>();
+    }
+    return random_string;
+}
+
 } // namespace valfuzz
 
 int main(int argc, char **argv)
@@ -286,7 +335,17 @@ int main(int argc, char **argv)
     if (valfuzz::get_header())
         valfuzz::print_header();
 
+    int seed = std::time(nullptr);
+    std::srand(seed);
+
     valfuzz::get_function_execute_before()();
+
+    {
+        std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
+        std::print("Seed: {}\n", seed);
+        std::print("Running {} tests...\n", valfuzz::get_num_tests());
+    }
+
     valfuzz::run_tests();
     valfuzz::get_function_execute_after()();
 
