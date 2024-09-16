@@ -33,13 +33,13 @@ namespace valfuzz
 
 auto &get_tests()
 {
-    constinit static std::vector<test_pair> registered_tests;
+    static std::deque<test_pair> registered_tests = {};
     return registered_tests;
 }
 
 auto &get_tests_queue()
 {
-    constinit static std::vector<test_pair> tests_queue;
+    static std::deque<test_pair> tests_queue = {};
     return tests_queue;
 }
 
@@ -128,8 +128,8 @@ std::optional<test_pair> pop_test_from_queue_or_null()
     {
         return std::nullopt;
     }
-    test_pair test = tests_queue.back();
-    tests_queue.pop_back();
+    test_pair test = tests_queue.front();
+    tests_queue.pop_front();
     return test;
 }
 

@@ -40,7 +40,7 @@ TEST(simple, "Simple Assertion") {
 }
 ```
 ```
-test: Simple Assertion, line: 7, Assertion failed: 1 != 2
+test: Simple Assertion, line: 3, Assertion failed: 1 != 2
 ```
 
 The library already contains a main so you just need to define the tests with `TEST`, the first
