@@ -52,7 +52,7 @@ namespace valfuzz
     {                                                                          \
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
         std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";  \
-        std::cerr << "Assertion failed:" << #cond << std::endl;                \
+        std::cerr << "Assertion failed: " << #cond << std::endl;                \
     }
 
 #define ASSERT_EQ(a, b)                                                        \
@@ -108,19 +108,24 @@ namespace valfuzz
 typedef std::function<void(std::string)> test_function;
 typedef std::pair<std::string, test_function> test_pair;
 
+void parse_args(int argc, char *argv[]);
+void print_header();
+
 /* state */
 auto &get_tests();
 auto &get_tests_queue();
+auto &get_thread_pool();
 std::mutex &get_test_queue_mutex();
 std::mutex &get_stream_mutex();
 auto &get_is_threaded();
-auto &get_thread_pool();
 auto &get_max_num_threads();
 auto &get_verbose();
+auto &get_header();
 
 void set_multithreaded(bool is_threaded);
 void set_max_num_threads(long unsigned int max_num_threads);
 void set_verbose(bool verbose);
+void set_header(bool header);
 void add_test(const std::string &name, test_function test);
 void add_test_to_queue(const std::string &name, test_function test);
 std::optional<test_pair> pop_test_from_queue_or_null();

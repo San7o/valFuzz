@@ -85,6 +85,12 @@ auto &get_verbose()
     return verbose;
 }
 
+auto &get_header()
+{
+     constinit static std::atomic<bool> header = true;
+     return header;
+}
+
 void set_multithreaded(bool is_threaded)
 {
     auto &is_threaded_ref = get_is_threaded();
@@ -101,6 +107,12 @@ void set_verbose(bool verbose)
 {
     auto &verbose_ref = get_verbose();
     verbose_ref = verbose;
+}
+
+void set_header(bool header)
+{
+    auto &header_ref = get_header();
+    header_ref = header;
 }
 
 void add_test(const std::string &name, test_function test)
@@ -176,16 +188,80 @@ void run_tests()
     }
 }
 
+void parse_args(int argc, char *argv[])
+{
+    for (int i = 1; i < argc; i++)
+    {
+        if (std::string(argv[i]) == "--no-multithread")
+        {
+            set_multithreaded(false);
+        }
+        else if (std::string(argv[i]) == "--verbose")
+        {
+            set_verbose(true);
+        }
+        else if (std::string(argv[i]) == "--max-threads")
+        {
+            if (i + 1 < argc)
+            {
+                set_max_num_threads(std::stoul(argv[i + 1]));
+                i++;
+            }
+        }
+        else if (std::string(argv[i]) == "--no-header")
+        {
+            set_header(false);
+        }
+        else if (std::string(argv[i]) == "--help")
+        {
+            std::print("Usage: valfuzz [options]\n");
+            std::print("Options:\n");
+            std::print("  --no-multithread: run tests in a single thread\n");
+            std::print("  --verbose: print test names\n");
+            std::print("  --max-threads <num>: set the maximum number of threads\n");
+            std::print("  --no-header: do not print the header at the start\n");
+            std::print("  --help: print this help message\n");
+            std::exit(0);
+        }
+        else
+        {
+            std::print("Unknown option: {}\n", argv[i]);
+            std::exit(1);
+        }
+    }
+}
+
+char valfuzz_banner[] =
+"             _ _____              \n"
+" __   ____ _| |  ___|   _ ________\n"
+" \\ \\ / / _` | | |_ | | | |_  /_  /\n"
+"  \\ V / (_| | |  _|| |_| |/ / / / \n"
+"   \\_/ \\__,_|_|_|   \\__,_/___/___|\n"
+"                                  \n"
+"A modern testing & fuzzing framework for C++\n";
+
+void print_header()
+{
+    bool verbose = get_verbose();
+    bool is_threaded = get_is_threaded();
+    long unsigned int max_num_threads = get_max_num_threads();
+    std::lock_guard<std::mutex> lock(get_stream_mutex());
+    std::print("{}", valfuzz_banner);
+    std::print("Settings:\n");
+    std::print(" - Multithreaded: {}\n", is_threaded);
+    std::print(" - Max threads: {}\n", max_num_threads);
+    std::print(" - Verbose: {}\n", verbose);
+    std::print("\n");
+}
+
 } // namespace valfuzz
 
-int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
+int main(int argc, char **argv)
 {
-    // TODO: parse args
+    valfuzz::parse_args(argc, argv);
+    if (valfuzz::get_header())
+        valfuzz::print_header();
 
-    std::print("Starting tests, running {} tests\n", valfuzz::get_num_tests());
-
-    valfuzz::set_multithreaded(true); // default true
-    valfuzz::set_verbose(false); // default false
     valfuzz::run_tests();
 
     //  get_args(a_function);

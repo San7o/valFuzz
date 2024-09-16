@@ -1,5 +1,22 @@
 # valFuzz
 
+```
+             _ _____
+ __   ____ _| |  ___|   _ ________
+ \ \ / / _` | | |_ | | | |_  /_  /
+  \ V / (_| | |  _|| |_| |/ / / /
+   \_/ \__,_|_|_|   \__,_/___/___|
+
+A modern testing & fuzzing framework for C++
+Settings:
+ - Multithreaded: true
+ - Max threads: 4
+ - Verbose: true
+
+Running test: Simple Assertion
+...
+```
+
 valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library for c++23.
 
 ## Features
@@ -12,7 +29,7 @@ valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library 
 
 - [x] toggle verbose
 
-- [ ] arguments settings
+- [x] arguments settings
 
 - [ ] execute before / after all
 
@@ -28,6 +45,18 @@ a shared or static library with the following flags:
 
 ```bash
 cmake -Bbuild -DVALFUZZ_BUILD_SHARED=ON -DVALFUZZ_BUILD_STATIC=ON
+```
+
+## Arguments
+You can pass the following arguments to the compiled executable:
+```
+Usage: valfuzz [options]
+Options:
+  --no-multithread: run tests in a single thread
+  --verbose: print test names
+  --max-threads <num>: set the maximum number of threads
+  --no-header: do not print the header at the start
+  --help: print this help message
 ```
 
 ## Examples
