@@ -115,6 +115,8 @@ void print_header();
 auto &get_tests();
 auto &get_tests_queue();
 auto &get_thread_pool();
+auto &get_function_execute_before();
+auto &get_function_execute_after();
 std::mutex &get_test_queue_mutex();
 std::mutex &get_stream_mutex();
 auto &get_is_threaded();
@@ -126,6 +128,8 @@ void set_multithreaded(bool is_threaded);
 void set_max_num_threads(long unsigned int max_num_threads);
 void set_verbose(bool verbose);
 void set_header(bool header);
+void set_function_execute_before(std::function<void()> f);
+void set_function_execute_after(std::function<void()> f);
 void add_test(const std::string &name, test_function test);
 void add_test_to_queue(const std::string &name, test_function test);
 std::optional<test_pair> pop_test_from_queue_or_null();
@@ -142,6 +146,28 @@ void run_tests();
         }                                                                      \
     } name##_register_instance;                                                \
     void name(const std::string &test_name)
+
+#define BEFORE()                                                               \
+    void before();                                                             \
+    static struct before##_register                                            \
+    {                                                                          \
+        before##_register()                                                    \
+        {                                                                      \
+            valfuzz::set_function_execute_before(before);                      \
+        }                                                                      \
+    } before##_register_instance;                                              \
+    void before()
+
+#define AFTER()                                                                \
+    void after();                                                              \
+    static struct after##_register                                             \
+    {                                                                          \
+        after##_register()                                                     \
+        {                                                                      \
+            valfuzz::set_function_execute_after(after);                        \
+        }                                                                      \
+    } after##_register_instance;                                               \
+    void after()
 
 /* Fuzzer */
 

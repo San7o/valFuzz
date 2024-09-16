@@ -12,10 +12,15 @@ set(VALFUZZ_EXAMPLES_SOURCE)
 set(VALFUZZ_INCLUDES)
 set(VALFUZZ_SOURCES)
 set(VALFUZZ_COMPILE_OPTIONS)
+set(VALFUZZ_TEST_SOURCES)
 
 list(APPEND VALFUZZ_INCLUDES include)
 list(APPEND VALFUZZ_SOURCES src/valfuzz.cpp)
 list(APPEND VALFUZZ_COMPILE_OPTIONS -Wall -Wextra -Werror -Wpedantic)
+list(APPEND VALFUZZ_TEST_SOURCES
+    tests/asserts_test.cpp
+    tests/before_after_test.cpp
+)
 
 if (VALFUZZ_BUILD_EXAMPLES)
     list(APPEND VALFUZZ_EXAMPLES_SOURCE
@@ -39,7 +44,7 @@ if (VALFUZZ_BUILD_EXAMPLES)
     target_compile_options(valfuzz_simple PRIVATE ${VALFUZZ_COMPILE_OPTIONS})
 endif()
 if (VALFUZZ_BUILD_TESTS)
-    add_executable(asserts_test tests/asserts_test.cpp ${VALFUZZ_SOURCES})
+    add_executable(asserts_test ${VALFUZZ_SOURCES} ${VALFUZZ_TEST_SOURCES})
     target_include_directories(asserts_test PRIVATE ${VALFUZZ_INCLUDES})
     target_compile_options(asserts_test PRIVATE ${VALFUZZ_COMPILE_OPTIONS})
 endif()

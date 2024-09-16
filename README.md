@@ -7,7 +7,7 @@
   \ V / (_| | |  _|| |_| |/ / / /
    \_/ \__,_|_|_|   \__,_/___/___|
 
-A modern testing & fuzzing framework for C++
+A modern testing & fuzzing library for C++
 Settings:
  - Multithreaded: true
  - Max threads: 4
@@ -31,7 +31,7 @@ valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library 
 
 - [x] arguments settings
 
-- [ ] execute before / after all
+- [x] execute before / after all
 
 - [ ] naive fuzzing
 
@@ -59,8 +59,8 @@ Options:
   --help: print this help message
 ```
 
-## Examples
-
+## Run a Test
+You can run a test by defining it with the `TEST` macro:
 ```c++
 #include "valfuzz/valfuzz.hpp"
 
@@ -75,3 +75,20 @@ test: Simple Assertion, line: 3, Assertion failed: 1 != 2
 The library already contains a main so you just need to define the tests with `TEST`, the first
 argument is the test name, the second one is the name that will be displayed in the output
 when an assertion on the test fails.
+
+## Execute before and after all
+You can set a function to be executed either before or after all the tests with
+the macro `BEFORE()` and `AFTER()`:
+```c++
+BEFORE() {
+    std::cout << "Before test" << std::endl;
+}
+
+AFTER() {
+    std::cout << "After test" << std::endl;
+}
+
+TEST(a_test, "Another simple test") {
+    ASSERT_EQ(1, 1);
+}
+```

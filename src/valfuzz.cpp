@@ -43,6 +43,18 @@ auto &get_tests_queue()
     return tests_queue;
 }
 
+auto &get_function_execute_before()
+{
+    static std::function<void()> function_execute_before = []() {};
+    return function_execute_before;
+}
+
+auto &get_function_execute_after()
+{
+    static std::function<void()> function_execute_after = []() {};
+    return function_execute_after;
+}
+
 std::mutex &get_tests_queue_mutex()
 {
     constinit static std::mutex tests_queue_mutex;
@@ -113,6 +125,18 @@ void set_header(bool header)
 {
     auto &header_ref = get_header();
     header_ref = header;
+}
+
+void set_function_execute_before(std::function<void()> f)
+{
+    auto &function_execute_before = get_function_execute_before();
+    function_execute_before = f;
+}
+
+void set_function_execute_after(std::function<void()> f)
+{
+    auto &function_execute_after = get_function_execute_after();
+    function_execute_after = f;
 }
 
 void add_test(const std::string &name, test_function test)
@@ -238,7 +262,7 @@ char valfuzz_banner[] =
 "  \\ V / (_| | |  _|| |_| |/ / / / \n"
 "   \\_/ \\__,_|_|_|   \\__,_/___/___|\n"
 "                                  \n"
-"A modern testing & fuzzing framework for C++\n";
+"A modern testing & fuzzing library for C++\n";
 
 void print_header()
 {
@@ -262,7 +286,9 @@ int main(int argc, char **argv)
     if (valfuzz::get_header())
         valfuzz::print_header();
 
+    valfuzz::get_function_execute_before()();
     valfuzz::run_tests();
+    valfuzz::get_function_execute_after()();
 
     //  get_args(a_function);
 
