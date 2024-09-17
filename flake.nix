@@ -28,11 +28,11 @@
             gcc14                   # compiler
             cmake                   # build system
             valgrind                # memory debugger
-            clang-tools             # code formatting
             gdb                     # debugger
             doxygen                 # documentation
             libz.dev                # compression
             llvmPackages.libcxxClang
+            llvmPackages_19.clang-tools
           ];
           shellHook = ''
               zsh

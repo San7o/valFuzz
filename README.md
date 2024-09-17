@@ -11,16 +11,17 @@ Settings:
  - Max threads: 4
  - Verbose: true
 
+Seed: 1726579491
 Running 1337 tests...
 ```
 
-valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library for C++23. Check out [tests](./tests) for some examples on how to use this library.
+valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library for C++23. Check out [tests](./tests) for some examples on how to use this library, or read the online documentation [here](https://san7o.github.io/brenta-engine-documentation/valfuzz/v1.0/).
 
 ## Features
 
 - [x] assert macros
 
-- [x] automatic test registrazion
+- [x] automatic test registration
 
 - [x] parallel execution
 
@@ -31,17 +32,6 @@ valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library 
 - [x] fuzzing
 
 # Usage
-
-Copy [include/valfuzz/valfuzz.hpp](./include/valfuzz/valfuzz.hpp) and [src/valfuzz.cpp](./src/valfuzz.cpp)
-in your include and source directories respectively, or link to the shared library. You can compile
-a shared or static library with the following flags:
-
-```bash
-cmake -Bbuild -DVALFUZZ_BUILD_SHARED=ON -DVALFUZZ_BUILD_STATIC=ON
-```
-
-## Arguments
-You can pass the following arguments to the compiled executable:
 ```
 Usage: valfuzz [options]
 Options:
@@ -54,6 +44,17 @@ Options:
   --no-header: do not print the header at the start
   --help: print this help message
 ```
+
+Copy [include/valfuzz/valfuzz.hpp](./include/valfuzz/valfuzz.hpp) and [src/valfuzz.cpp](./src/valfuzz.cpp)
+in your include and source directories respectively, or link to the shared library. You can compile
+a shared or static library with the following flags:
+
+```bash
+cmake -Bbuild -DVALFUZZ_BUILD_SHARED=ON -DVALFUZZ_BUILD_STATIC=ON
+```
+
+## Documentation
+You can read a comprehensive documentation [here](https://san7o.github.io/brenta-engine-documentation/valfuzz/v1.0/). Here is presented a quick guide to showcase the library's api.
 
 ## Run tests
 You can run a test by defining it with the `TEST` macro:
@@ -74,7 +75,7 @@ when an assertion on the test fails.
 
 ## Run a single test
 
-If you want, you can run a specific test by passing It's name to `--test` argument:
+If you want, you can run a specific test by passing Its name to `--test` argument:
 ```bash
 ./build/asserts_test --test "Simple Assertion"
 ```
@@ -97,7 +98,7 @@ TEST(a_test, "Another simple test") {
 ```
 
 ## Fuzzing
-You can setup a fuzz test using the `FUZZME` macro, specifying am unique
+You can set up a fuzz test using the `FUZZME` macro, specifying an unique
 fuzz name and a string name:
 ```c++
 FUZZME(simple_fuzzing, "Simple fuzzing")
@@ -112,7 +113,7 @@ and use the `get_random<T>()` function to get a random value of `T` type. Fuzz
 tests are executed continuously in a multithreaded environment (unless you
 specify `--no-multithread`) until you stop the program.
 
-You can run with fuzzing by specifyting `--fuzz`:
+You can run with fuzzing by specifying `--fuzz`:
 ```bash
 ./build/asserts_test --fuzz
 ```
@@ -131,4 +132,4 @@ Iterations: 3000000
 
 # License
 
-This libray falls under [MIT](./LICENSE) license.
+This library falls under [MIT](./LICENSE) license.

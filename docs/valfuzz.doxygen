@@ -1,0 +1,160 @@
+// vim: set filetype=cpp :
+/// 
+/// \mainpage valFuzz Documentation
+/// ```
+///              _ _____
+///  __   ____ _| |  ___|   _ ________
+///  \ \ / / _` | | |_ | | | |_  /_  /
+///   \ V / (_| | |  _|| |_| |/ / / /
+///    \_/ \__,_|_|_|   \__,_/___/___|
+/// 
+/// A modern testing & fuzzing library for C++
+/// Settings:
+///  - Multithreaded: true
+///  - Max threads: 4
+///  - Verbose: false
+/// 
+/// Seed: 1726579491
+/// Running 18 tests...
+/// ```
+/// Welcome to the official valFuzz documentation. This guide provides comprehensive
+/// information and practical examples to help you use valFuzz for your testing and
+/// fuzzing needs.
+/// 
+/// \section overview Overview
+///
+/// valFuzz is a minimal and lightweight fuzzing framework for C++23. It uses modern
+/// standards and techniques to provide a robust and efficient framework for testing
+/// and fuzzing for small-medium size projects without particular
+/// testing requirements. Despite this, the simpliciry of the library allows for easy extension and
+/// customization for your own need.
+///
+/// \section installation Installation
+/// The library is composed of a header and a source file: `include/valfuzz/valfuzz.hpp` and `src/valfuzz.cpp`
+/// respectively. To use the library, you can simply include the header file in your project and add the
+/// source file to your build sources.
+/// \code
+/// #include "valfuzz/valfuzz.hpp"
+/// \endcode
+///
+/// \section usage Usage
+///
+/// \subsection assertions Assertions
+///
+/// The library provides various macros for assertions to be used in your tests:
+/// - `ASSERT` - Asserts that the given expression is true.
+/// - `ASSERT_EQ` - Asserts that the two given values are equal.
+/// - `ASSERT_NE` - Asserts that the two given values are not equal.
+/// - `ASSERT_LT` - Asserts that the first value is less than the second value.
+/// - `ASSERT_LE` - Asserts that the first value is less than or equal to the second value.
+/// - `ASSERT_GT` - Asserts that the first value is greater than the second value.
+/// - `ASSERT_GE` - Asserts that the first value is greater than or equal to the second value.
+/// - `ASSERT_THROW` - Asserts that the given expression throws an exception of the given type.
+/// - `ASSERT_NO_THROW` - Asserts that the given expression does not throw any exception.
+///
+/// For example:
+/// \code
+/// ASSERT(1 == 1);  // Evaluates the expression
+/// ASSERT_NE(1, 2); // Evaluates the two expressions and compares them
+/// ASSERT_THROW(foo(), std::runtime_error); // Evaluates the expression and checks if it throws the given exception
+/// \endcode
+/// 
+/// When an assertion fails, the program will output the test name, the line number and the assertion arguments
+/// that caused the failure. The program will then continue to run the other tests.
+/// ```
+/// test: Simple Assertion Fail, line: 66, Assertion failed: 1 == 2
+/// test: Should Not Throw Fail, line: 85, Exception thrown
+/// ```
+///
+/// \subsection Run Your First Test
+/// To run your first test, you need to define a test function using the `TEST` macro. You
+/// will have to specify an unique name for the test and a string name for display purposes.
+///
+/// \code
+/// #include "valfuzz/valfuzz.hpp"
+///
+/// TEST(simple_assertion, "Simple Assertion")
+/// {
+///    ASSERT(1 == 1);
+/// }
+/// \endcode
+/// 
+/// Tests are automatically registered and run when the program starts. You can run a particular
+/// test by specifying the test name after `--test` as a command line argument:
+/// ```
+/// ./my_test --test "Simple Assertion"
+/// ```
+///
+/// \subsection setup Setup and Cleanup
+///
+/// It is often necessary to perform some setup and cleanup operations before tests are run. You
+/// can define those functions using the `BEFORE` and `AFTER` macros respectively. The setup function
+/// will be run before all tests and the cleanup function will be run after all tests.
+/// \code
+/// #include "valfuzz/valfuzz.hpp"
+///
+/// BEFORE()
+/// {
+///    std::cout << "Before test" << std::endl;
+/// }
+///
+/// TEST(a_test, "Another simple test")
+/// {
+///    ASSERT_EQ(1, 1);
+/// }
+///
+/// AFTER()
+/// {
+///    std::cout << "After test" << std::endl;
+/// }
+/// \endcode
+///
+/// \subsection fuzzing Fuzzing
+///
+/// valFuzz provides a simple interface for fuzzing your code. You can define a fuzz function using the
+/// `FUZZME` macro, this function will be called repedetly on multiple threads until you stop the program.
+/// You can disable multithreading by passing `--no-multithread` as a command line argument.
+/// \code
+/// FUZZME(naive_fuzzing, "Naive fuzzing")
+/// {
+///     ASSERT_EQ(1==1);
+/// }
+/// \endcode
+///  You can get random values using the `T get_random<T>()` function, where `T` is the type of the value you want to get.
+///  The function will return a random value of the given type, allowed types are:
+///  - `int`
+///  - `float`
+///  - `double`
+///  - `char`
+///  - `std::string`
+///
+/// \code
+/// FUZZME(divide_fuzzing, "Divide fuzzing")
+/// {
+///     int a = valfuzz::get_random<int>();
+///     int b = valfuzz::get_random<int>();
+///     int ret = foo_bar(a, b);
+///     ASSERT_NO_THROW(ret);
+/// }
+/// \endcode
+///
+/// After defining the fuzz function, you can run it by passing `--fuzz` as a command line argument:
+/// ```
+/// ./my_test --fuzz
+/// ```
+///
+/// \subsection multithreading Multithreading
+///
+/// All tests and fuzz functions are run on multiple threads by default. You can disable multithreading
+/// by passing `--no-multithread` as a command line argument.
+///
+/// \subsection command_line Command Line Arguments
+/// You can pass the following command line arguments to the program:
+/// - `--test <test_name>` - Run a specific test by name.
+/// - `--fuzz            ` - Run all fuzz functions.
+/// - `--fuzz <fuzz_name>` - Run a specific fuzz function by name.
+/// - `--no-multithread` - Disable multithreading.
+/// - `--verbose` - Enable verbose output.
+/// - `--max-threads <n>` - Set the maximum number of threads to use.
+/// - `--no-header` - Disable the header print at the start.
+/// - `--help` - Display help information.
