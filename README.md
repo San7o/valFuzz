@@ -1,5 +1,3 @@
-# valFuzz
-
 ```
              _ _____
  __   ____ _| |  ___|   _ ________
@@ -16,25 +14,21 @@ Settings:
 Running 1337 tests...
 ```
 
-valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library for c++23.
+valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library for C++23. Check out [tests](./tests) for some examples on how to use this library.
 
 ## Features
 
 - [x] assert macros
 
-- [x] tests
+- [x] automatic test registrazion
 
 - [x] parallel execution
 
-- [x] toggle verbose
-
-- [x] arguments settings
+- [x] arguments options
 
 - [x] execute before / after all
 
-- [x] naive fuzzing
-
-- [ ] genetic fuzzing
+- [x] fuzzing
 
 # Usage
 
@@ -51,6 +45,9 @@ You can pass the following arguments to the compiled executable:
 ```
 Usage: valfuzz [options]
 Options:
+  --test <name>: run a specific test
+  --fuzz: run fuzz tests
+  --fuzz-one <name>: run a specific fuzz test
   --no-multithread: run tests in a single thread
   --verbose: print test names
   --max-threads <num>: set the maximum number of threads
@@ -58,7 +55,7 @@ Options:
   --help: print this help message
 ```
 
-## Run a Test
+## Run tests
 You can run a test by defining it with the `TEST` macro:
 ```c++
 #include "valfuzz/valfuzz.hpp"
@@ -74,6 +71,13 @@ test: Simple Assertion, line: 3, Assertion failed: 1 != 2
 The library already contains a main so you just need to define the tests with `TEST`, the first
 argument is the test name, the second one is the name that will be displayed in the output
 when an assertion on the test fails.
+
+## Run a single test
+
+If you want, you can run a specific test by passing It's name to `--test` argument:
+```bash
+./build/asserts_test --test "Simple Assertion"
+```
 
 ## Execute before and after all
 You can set a function to be executed either before or after all the tests with
@@ -93,11 +97,38 @@ TEST(a_test, "Another simple test") {
 ```
 
 ## Fuzzing
-The fizzer is not yet implemented, for now 
-you can generate random number of basic types `int`, `double`, `float`, `char` and `string`:
+You can setup a fuzz test using the `FUZZME` macro, specifying am unique
+fuzz name and a string name:
 ```c++
-int a = valfuzz::get_random<int>();
-int b = valfuzz::get_random<int>();
-int ret = sum_int(a, b);
-ASSERT_EQ(ret, a + b);
+FUZZME(simple_fuzzing, "Simple fuzzing")
+{
+    int a = valfuzz::get_random<int>();
+    int b = valfuzz::get_random<int>();
+    int ret = sum_int(a, b);
+    ASSERT_EQ(ret, a + b);
+}
 ```
+and use the `get_random<T>()` function to get a random value of `T` type. Fuzz
+tests are executed continuously in a multithreaded environment (unless you
+specify `--no-multithread`) until you stop the program.
+
+You can run with fuzzing by specifyting `--fuzz`:
+```bash
+./build/asserts_test --fuzz
+```
+
+You can also specify a specific fuzz test to fuzz:
+```bash
+./build/asserts_test --fuzz-one "Simple fuzzing"
+```
+```
+Running fuzz test: Simple fuzzing
+Iterations: 1000000
+Iterations: 2000000
+Iterations: 3000000
+...
+```
+
+# License
+
+This libray falls under [MIT](./LICENSE) license.

@@ -1,21 +1,68 @@
-#include "valfuzz/valfuzz.hpp"
 /*
-FUZZME(a_function, int a, int b)
-{
-    [[maybe_unused]] auto c = a + b;
-    return 0;
-}
-*/
+ * MIT License
+ *
+ * Copyright (c) 2024 Giovanni Santini
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+#include "valfuzz/valfuzz.hpp"
 
 int sum_int(int a, int b)
 {
     return a + b;
 }
 
-TEST(naive_fuzzing, "Naive fuzzing")
+FUZZME(naive_fuzzing, "Naive fuzzing")
 {
     int a = valfuzz::get_random<int>();
     int b = valfuzz::get_random<int>();
     int ret = sum_int(a, b);
     ASSERT_EQ(ret, a + b);
+}
+
+int foo_bar(int a, int b)
+{
+    if (a == 0)
+    {
+        return 0;
+    }
+    if (b == 0)
+    {
+        return 0;
+    }
+    return a / b;
+}
+
+FUZZME(divide_fuzzing, "Divide fuzzing")
+{
+    int a = valfuzz::get_random<int>();
+    int b = valfuzz::get_random<int>();
+    int ret = foo_bar(a, b);
+    if (b != 0)
+    {
+        ASSERT_EQ(ret, a / b);
+    }
+    else
+    {
+        ASSERT_EQ(ret, 0);
+    }
 }

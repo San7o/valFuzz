@@ -41,12 +41,6 @@ std::deque<fuzz_pair> &get_fuzzs()
     return registered_fuzzs;
 }
 
-std::deque<test_pair> &get_tests_queue()
-{
-    static std::deque<test_pair> tests_queue = {};
-    return tests_queue;
-}
-
 std::function<void()> &get_function_execute_before()
 {
     static std::function<void()> function_execute_before = []() {};
@@ -59,10 +53,10 @@ std::function<void()> &get_function_execute_after()
     return function_execute_after;
 }
 
-std::mutex &get_tests_queue_mutex()
+std::mutex &get_tests_mutex()
 {
-    constinit static std::mutex tests_queue_mutex;
-    return tests_queue_mutex;
+    constinit static std::mutex tests_mutex;
+    return tests_mutex;
 }
 
 std::mutex &get_stream_mutex()
@@ -107,6 +101,30 @@ std::atomic<bool> &get_header()
     return header;
 }
 
+std::atomic<bool> &get_do_fuzzing()
+{
+    constinit static std::atomic<bool> do_fuzzing = false;
+    return do_fuzzing;
+}
+
+std::optional<std::string> &get_test_one()
+{
+    constinit static std::optional<std::string> test_one = std::nullopt;
+    return test_one;
+}
+
+std::optional<std::string> &get_fuzz_one()
+{
+    constinit static std::optional<std::string> fuzz_one = std::nullopt;
+    return fuzz_one;
+}
+
+long unsigned int get_num_fuzz_tests()
+{
+    auto &fuzzs = get_fuzzs();
+    return fuzzs.size();
+}
+
 void set_multithreaded(bool is_threaded)
 {
     auto &is_threaded_ref = get_is_threaded();
@@ -143,52 +161,88 @@ void set_function_execute_after(std::function<void()> f)
     function_execute_after = f;
 }
 
+void set_do_fuzzing(bool do_fuzzing)
+{
+    auto &do_fuzzing_ref = get_do_fuzzing();
+    do_fuzzing_ref = do_fuzzing;
+}
+
+void set_test_one(const std::string &test_one)
+{
+    auto &test_one_ref = get_test_one();
+    test_one_ref = test_one;
+}
+
+void set_fuzz_one(const std::string &fuzz_one)
+{
+    auto &fuzz_one_ref = get_fuzz_one();
+    fuzz_one_ref = fuzz_one;
+}
+
 void add_test(const std::string &name, test_function test)
 {
     auto &tests = get_tests();
+    std::lock_guard<std::mutex> lock(get_tests_mutex());
     tests.push_back({name, test});
-}
-
-void add_test_to_queue(const std::string &name, test_function test)
-{
-    auto &tests_queue = get_tests_queue();
-    auto &tests_queue_mutex = get_tests_queue_mutex();
-
-    std::lock_guard<std::mutex> lock(tests_queue_mutex);
-    tests_queue.push_back({name, test});
 }
 
 void add_fuzz_test(const std::string &name, fuzz_function fuzz)
 {
     auto &fuzzs = get_fuzzs();
+    std::lock_guard<std::mutex> lock(get_tests_mutex());
     fuzzs.push_back({name, fuzz});
 }
 
-std::optional<test_pair> pop_test_from_queue_or_null()
+std::optional<test_pair> pop_test_or_null()
 {
-    auto &tests_queue = get_tests_queue();
-    auto &tests_queue_mutex = get_tests_queue_mutex();
+    auto &tests = get_tests();
+    auto &tests_mutex = get_tests_mutex();
 
-    std::lock_guard<std::mutex> lock(tests_queue_mutex);
-    if (tests_queue.empty())
+    std::lock_guard<std::mutex> lock(tests_mutex);
+    if (tests.empty())
     {
         return std::nullopt;
     }
-    test_pair test = tests_queue.front();
-    tests_queue.pop_front();
+    test_pair test = tests.front();
+    tests.pop_front();
     return test;
 }
 
-void run_test_parallel()
+void run_one_test(const std::string &name)
+{
+    auto &tests = get_tests();
+    bool found = false;
+    for (auto &test : tests)
+    {
+        if (test.first == name)
+        {
+            {
+                std::lock_guard<std::mutex> lock(get_stream_mutex());
+                std::print("Running test: {}\n", test.first);
+            }
+            found = true;
+            test.second(test.first);
+            break;
+        }
+    }
+    if (!found)
+    {
+        std::lock_guard<std::mutex> lock(get_stream_mutex());
+        std::print("Test \"{}\" not found\n", name);
+        std::exit(1);
+    }
+}
+
+void _run_tests()
 {
     auto test = std::optional<test_pair>{};
-    while ((test = std::move(pop_test_from_queue_or_null())).has_value())
+    while ((test = std::move(pop_test_or_null())).has_value())
     {
         // run task
         if (get_verbose())
         {
             std::lock_guard<std::mutex> lock(get_stream_mutex());
-            std::print("Running test: {}\n", test.value().first);
+            std::print("Running test: \"{}\"\n", test.value().first);
         }
         test.value().second(test.value().first);
     }
@@ -196,20 +250,14 @@ void run_test_parallel()
 
 void run_tests()
 {
-    auto &tests = get_tests();
-
     if (get_is_threaded())
     {
-        // load tests queue
-        std::for_each(tests.begin(), tests.end(), [](auto &test)
-                      { add_test_to_queue(test.first, test.second); });
-
+        auto &thread_pool = get_thread_pool();
         // spawn threads
         for (long unsigned int i = 0;
              i < get_max_num_threads() && i < get_num_tests(); i++)
         {
-            auto &thread_pool = get_thread_pool();
-            thread_pool.push_back(std::thread(run_test_parallel));
+            thread_pool.push_back(std::thread(_run_tests));
         }
         for (auto &thread : get_thread_pool())
         {
@@ -218,8 +266,109 @@ void run_tests()
     }
     else
     {
-        std::for_each(tests.begin(), tests.end(),
-                      [](auto &test) { test.second(test.first); });
+        _run_tests();
+    }
+}
+
+std::atomic<long unsigned int> &get_iterations()
+{
+    constinit static std::atomic<long unsigned int> iterations = 0;
+    return iterations;
+}
+
+void increment_iterations()
+{
+    auto &iterations = get_iterations();
+    iterations++;
+}
+
+std::optional<fuzz_pair> pop_fuzz_or_null()
+{
+    auto &fuzzs = get_fuzzs();
+    auto &fuzzs_mutex = get_tests_mutex();
+
+    std::lock_guard<std::mutex> lock(fuzzs_mutex);
+    if (fuzzs.empty())
+    {
+        return std::nullopt;
+    }
+    test_pair test = fuzzs.front();
+    fuzzs.pop_front();
+    return test;
+}
+
+void run_one_fuzz(const std::string &name)
+{
+    auto &fuzzs = get_fuzzs();
+    std::deque<fuzz_pair> the_fuzz;
+    std::for_each(fuzzs.begin(), fuzzs.end(),
+                  [&the_fuzz, &name](fuzz_pair &fuzz)
+                  {
+                      if (fuzz.first == name)
+                      {
+                          for (long unsigned int i = 0;
+                               i < get_max_num_threads(); i++)
+                          {
+                              the_fuzz.push_back(fuzz);
+                          }
+                      }
+                  });
+    if (the_fuzz.empty())
+    {
+        std::lock_guard<std::mutex> lock(get_stream_mutex());
+        std::print("Fuzz test \"{}\" not found\n", name);
+        std::exit(1);
+    }
+    fuzzs = the_fuzz;
+    {
+        std::lock_guard<std::mutex> lock(get_stream_mutex());
+        std::print("Running fuzz test: {}\n", name);
+    }
+}
+
+void _run_fuzz_tests()
+{
+    auto fuzz = std::optional<fuzz_pair>{};
+    while ((fuzz = std::move(pop_fuzz_or_null())).has_value())
+    {
+        if (get_verbose())
+        {
+            std::lock_guard<std::mutex> lock(get_stream_mutex());
+            std::print("Running fuzz: \"{}\"\n", fuzz.value().first);
+        }
+        fuzz.value().second(fuzz.value().first);
+
+        increment_iterations();
+        long unsigned int iterations = get_iterations();
+        if (iterations % 1000000 == 0)
+        {
+            std::lock_guard<std::mutex> lock(get_stream_mutex());
+            std::print("Iterations: {}\n", iterations);
+        }
+
+        add_fuzz_test(fuzz.value().first, fuzz.value().second);
+    }
+}
+
+void run_fuzz_tests()
+{
+    if (get_is_threaded())
+    {
+        auto &thread_pool = get_thread_pool();
+        // spawn threads
+        for (long unsigned int i = 0;
+             i < get_max_num_threads() && i < get_num_fuzz_tests(); i++)
+        {
+            thread_pool.push_back(std::thread(_run_fuzz_tests));
+        }
+        for (auto &thread : get_thread_pool())
+        {
+            thread.join();
+        }
+    }
+    else
+    {
+        _run_fuzz_tests();
     }
 }
 
@@ -227,7 +376,28 @@ void parse_args(int argc, char *argv[])
 {
     for (int i = 1; i < argc; i++)
     {
-        if (std::string(argv[i]) == "--no-multithread")
+        if (std::string(argv[i]) == "--test")
+        {
+            if (i + 1 < argc)
+            {
+                set_test_one(argv[i + 1]);
+                i++;
+            }
+        }
+        else if (std::string(argv[i]) == "--fuzz")
+        {
+            set_do_fuzzing(true);
+        }
+        else if (std::string(argv[i]) == "--fuzz-one")
+        {
+            if (i + 1 < argc)
+            {
+                set_do_fuzzing(true);
+                set_fuzz_one(argv[i + 1]);
+                i++;
+            }
+        }
+        else if (std::string(argv[i]) == "--no-multithread")
         {
             set_multithreaded(false);
         }
@@ -251,6 +421,9 @@ void parse_args(int argc, char *argv[])
         {
             std::print("Usage: valfuzz [options]\n");
             std::print("Options:\n");
+            std::print("  --test <name>: run a specific test\n");
+            std::print("  --fuzz: run fuzz tests\n");
+            std::print("  --fuzz-one <name>: run a specific fuzz test\n");
             std::print("  --no-multithread: run tests in a single thread\n");
             std::print("  --verbose: print test names\n");
             std::print(
@@ -335,22 +508,45 @@ int main(int argc, char **argv)
     if (valfuzz::get_header())
         valfuzz::print_header();
 
-    int seed = std::time(nullptr);
+    long unsigned int seed = std::time(nullptr);
     std::srand(seed);
 
     valfuzz::get_function_execute_before()();
 
+    if (!valfuzz::get_do_fuzzing())
     {
-        std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
-        std::print("Seed: {}\n", seed);
-        std::print("Running {} tests...\n", valfuzz::get_num_tests());
+        if (valfuzz::get_test_one().has_value())
+        {
+            valfuzz::run_one_test(valfuzz::get_test_one().value());
+        }
+        else
+        {
+            {
+                std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
+                std::print("Seed: {}\n", seed);
+                std::print("Running {} tests...\n", valfuzz::get_num_tests());
+            }
+            valfuzz::run_tests();
+        }
+    }
+    else
+    {
+        if (valfuzz::get_fuzz_one().has_value())
+        {
+            valfuzz::run_one_fuzz(valfuzz::get_fuzz_one().value());
+        }
+        else
+        {
+            std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
+            std::print("Seed: {}\n", seed);
+            std::print("Running {} fuzz tests...\n",
+                       valfuzz::get_num_fuzz_tests());
+        }
+        valfuzz::run_fuzz_tests();
     }
 
-    valfuzz::run_tests();
     valfuzz::get_function_execute_after()();
+    std::print("Done\n");
 
-    //  get_args(a_function);
-
-    std::print("Tests finished\n");
     return 0;
 }
