@@ -17,6 +17,8 @@ Running 1337 tests...
 
 valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library for C++23. Check out [tests](./tests) for some examples on how to use this library, or read the online documentation [here](https://san7o.github.io/brenta-engine-documentation/valfuzz/v1.0/).
 
+> valFuzz is the official testing library for [Brenta Engine](https://github.com/San7o/Brenta-Engine).
+
 ## Features
 
 - [x] assert macros
@@ -51,6 +53,22 @@ a shared or static library with the following flags:
 
 ```bash
 cmake -Bbuild -DVALFUZZ_BUILD_SHARED=ON -DVALFUZZ_BUILD_STATIC=ON
+```
+
+### cpm
+You can easily use [cpm](https://github.com/cpm-cmake/CPM.cmake) to include
+the library in your project.
+```
+CPMAddPackage(
+    NAME valfuzz
+    GITHUB_REPOSITORY San7o/valFuzz
+    GIT_TAG v1.0.0
+    DOWNLOAD_ONLY True
+)
+if (valfuzz_ADDED AND BRENTA_BUILD_TESTS)
+    list(APPEND MY_INCLUDES ${valfuzz_SOURCE_DIR}/include)
+    list(APPEND MY_SOURCES ${valfuzz_SOURCE_DIR}/src/valfuzz.cpp)
+endif()
 ```
 
 ## Documentation
