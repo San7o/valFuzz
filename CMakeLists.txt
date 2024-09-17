@@ -3,6 +3,7 @@ project("valFuzz")
 
 set(CMAKE_CXX_STANDARD 23 REQUIRED)
 
+option(VALFUZZ_USE_CLANG "Use clang compiler" OFF)
 option(VALFUZZ_BUILD_TESTS "Build tests" ON)
 option(VALFUZZ_BUILD_SHARED "Build shared library" OFF)
 option(VALFUZZ_BUILD_STATIC "Build static library" OFF)
@@ -14,13 +15,17 @@ set(VALFUZZ_TEST_SOURCES)
 
 list(APPEND VALFUZZ_INCLUDES include)
 list(APPEND VALFUZZ_SOURCES src/valfuzz.cpp)
-list(APPEND VALFUZZ_COMPILE_OPTIONS -Wall -Wextra -Werror -Wpedantic)
+list(APPEND VALFUZZ_COMPILE_OPTIONS -Wall -Wextra -Werror -Wpedantic -Wconversion)
 list(APPEND VALFUZZ_TEST_SOURCES
     tests/asserts_test.cpp
     tests/before_after_test.cpp
     tests/simple_fuzz.cpp
     tests/generate_random_test.cpp
 )
+
+if (VALFUZZ_USE_CLANG)
+    set(CMAKE_CXX_COMPILER clang++)
+endif()
 
 if (VALFUZZ_BUILD_EXAMPLES)
     list(APPEND VALFUZZ_EXAMPLES_SOURCE

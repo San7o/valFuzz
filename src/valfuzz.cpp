@@ -236,7 +236,7 @@ void run_one_test(const std::string &name)
 void _run_tests()
 {
     auto test = std::optional<test_pair>{};
-    while ((test = std::move(pop_test_or_null())).has_value())
+    while ((test = pop_test_or_null()).has_value())
     {
         // run task
         if (get_verbose())
@@ -329,7 +329,7 @@ void run_one_fuzz(const std::string &name)
 void _run_fuzz_tests()
 {
     auto fuzz = std::optional<fuzz_pair>{};
-    while ((fuzz = std::move(pop_fuzz_or_null())).has_value())
+    while ((fuzz = pop_fuzz_or_null()).has_value())
     {
         if (get_verbose())
         {
@@ -508,7 +508,7 @@ int main(int argc, char **argv)
     if (valfuzz::get_header())
         valfuzz::print_header();
 
-    long unsigned int seed = std::time(nullptr);
+    unsigned int seed = (unsigned int) std::time(nullptr);
     std::srand(seed);
 
     valfuzz::get_function_execute_before()();

@@ -181,7 +181,8 @@ void set_function_execute_after(std::function<void()> f);
 void add_test(const std::string &name, test_function test);
 
 std::optional<test_pair> pop_test_or_null();
-void run_one_test(const std::string &name) void _run_tests();
+void run_one_test(const std::string &name);
+void _run_tests();
 void run_tests();
 
 #define TEST(name, pretty_name)                                                \
@@ -247,7 +248,8 @@ long unsigned int get_num_fuzz_tests();
 void increment_iterations();
 std::optional<fuzz_pair> pop_fuzz_or_null();
 void add_fuzz_test(const std::string &name, fuzz_function test);
-void run_one_fuzz(const std::string &name) void _run_fuzz_tests();
+void run_one_fuzz(const std::string &name);
+void _run_fuzz_tests();
 void run_fuzz_tests();
 
 } // namespace valfuzz
