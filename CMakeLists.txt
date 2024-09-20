@@ -21,6 +21,7 @@ list(APPEND VALFUZZ_TEST_SOURCES
     tests/before_after_test.cpp
     tests/simple_fuzz.cpp
     tests/generate_random_test.cpp
+    tests/benchmark_test.cpp
 )
 
 if (VALFUZZ_USE_CLANG)

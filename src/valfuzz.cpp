@@ -397,6 +397,18 @@ void parse_args(int argc, char *argv[])
                 i++;
             }
         }
+        else if (std::string(argv[i]) == "--benchmark")
+        {
+            set_do_benchmarks(true);
+        }
+        else if (std::string(argv[i]) == "--num-iterations")
+        {
+            if (i + 1 < argc)
+            {
+                set_num_iterations_benchmark(std::stoi(argv[i + 1]));
+                i++;
+            }
+        }
         else if (std::string(argv[i]) == "--no-multithread")
         {
             set_multithreaded(false);
@@ -424,6 +436,9 @@ void parse_args(int argc, char *argv[])
             std::print("  --test <name>: run a specific test\n");
             std::print("  --fuzz: run fuzz tests\n");
             std::print("  --fuzz-one <name>: run a specific fuzz test\n");
+            std::print("  --benchmark: run benchmarks\n");
+            std::print("  --num-iterations <num>: set the number of "
+                       "iterations for benchmarks\n");
             std::print("  --no-multithread: run tests in a single thread\n");
             std::print("  --verbose: print test names\n");
             std::print(
@@ -452,12 +467,16 @@ void print_header()
 {
     bool verbose = get_verbose();
     bool is_threaded = get_is_threaded();
+    bool do_fuzzing = get_do_fuzzing();
+    bool do_benchmarks = get_do_benchmarks();
     long unsigned int max_num_threads = get_max_num_threads();
     std::lock_guard<std::mutex> lock(get_stream_mutex());
     std::print("{}", valfuzz_banner);
     std::print("Settings:\n");
     std::print(" - Multithreaded: {}\n", is_threaded);
     std::print(" - Max threads: {}\n", max_num_threads);
+    std::print(" - Run Fuzzs: {}\n", do_fuzzing);
+    std::print(" - Run Benchmarks: {}\n", do_benchmarks);
     std::print(" - Verbose: {}\n", verbose);
     std::print("\n");
 }
@@ -500,6 +519,117 @@ template <> std::string get_random<std::string>()
     return random_string;
 }
 
+#if defined(_WIN32) || defined(_WIN64)
+unsigned long get_cache_l3_size()
+{
+    return 0;
+}
+#else
+unsigned long get_cache_l3_size()
+{
+    std::ifstream file("/sys/devices/system/cpu/cpu0/cache/index2/size");
+    std::string size_str;
+    if (file.is_open())
+    {
+        std::getline(file, size_str);
+        file.close();
+    }
+
+    char unit = size_str.back();
+    size_str.pop_back();
+    unsigned long cache_size = std::stoul(size_str);
+
+    switch (unit)
+    {
+    case 'K':
+        cache_size *= 1024;
+        break;
+    case 'M':
+        cache_size *= 1024 * 1024;
+        break;
+    default:
+        break;
+    }
+
+    return cache_size;
+}
+#endif
+
+bool &get_do_benchmarks()
+{
+    constinit static bool do_benchmarks = false;
+    return do_benchmarks;
+}
+
+std::deque<benchmark_pair> &get_benchmarks()
+{
+    static std::deque<benchmark_pair> registered_benchmarks = {};
+    return registered_benchmarks;
+}
+
+int &get_num_iterations_benchmark()
+{
+    constinit static int num_iterations_benchmark = 100000;
+    return num_iterations_benchmark;
+}
+
+unsigned long get_num_benchmarks()
+{
+    auto &benchmarks = get_benchmarks();
+    return benchmarks.size();
+}
+
+void add_benchmark(const std::string &name, benchmark_function benchmark)
+{
+    auto &benchmarks = get_benchmarks();
+    benchmarks.push_back({name, benchmark});
+}
+
+void set_do_benchmarks(bool do_benchmarks)
+{
+    auto &do_benchmarks_ref = get_do_benchmarks();
+    do_benchmarks_ref = do_benchmarks;
+}
+
+void set_num_iterations_benchmark(int num_iterations)
+{
+    auto &num_iterations_benchmark = get_num_iterations_benchmark();
+    num_iterations_benchmark = num_iterations;
+}
+
+void run_benchmarks()
+{
+    const size_t bigger_than_cachesize = get_cache_l3_size() * 2;
+    long *p = new long[bigger_than_cachesize];
+    {
+        std::lock_guard<std::mutex> lock(get_stream_mutex());
+        std::print("Cache size: {}\n", get_cache_l3_size());
+    }
+    for (auto &benchmark : get_benchmarks())
+    {
+        // flush cache
+        for (size_t i = 0; i < bigger_than_cachesize; i++)
+        {
+            p[i] = std::rand();
+        }
+        if (get_verbose())
+        {
+            std::lock_guard<std::mutex> lock(get_stream_mutex());
+            std::print("Running benchmark: {}\n", benchmark.first);
+            std::cout << std::flush;
+        }
+        else
+        {
+
+            std::lock_guard<std::mutex> lock(get_stream_mutex());
+            std::print("");
+            std::cout << std::flush;
+        }
+        benchmark.second(benchmark.first);
+    }
+    delete[] p;
+}
+
 } // namespace valfuzz
 
 int main(int argc, char **argv)
@@ -513,7 +643,16 @@ int main(int argc, char **argv)
 
     valfuzz::get_function_execute_before()();
 
-    if (!valfuzz::get_do_fuzzing())
+    if (valfuzz::get_do_benchmarks())
+    {
+        {
+            std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
+            std::print("Running {} benchmarks...\n",
+                       valfuzz::get_num_benchmarks());
+        }
+        valfuzz::run_benchmarks();
+    }
+    else if (!valfuzz::get_do_fuzzing())
     {
         if (valfuzz::get_test_one().has_value())
         {

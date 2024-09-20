@@ -32,6 +32,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <deque>
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <limits>
@@ -45,6 +46,8 @@
 #include <typeinfo>
 #include <utility>
 #include <vector>
+
+#define NUM_ITERATIONS_BENCHMARK 100000
 
 namespace valfuzz
 {
@@ -251,5 +254,50 @@ void add_fuzz_test(const std::string &name, fuzz_function test);
 void run_one_fuzz(const std::string &name);
 void _run_fuzz_tests();
 void run_fuzz_tests();
+
+/* Benchmarks */
+
+#define BENCHMARK(name, pretty_name)                                           \
+    void name([[maybe_unused]] const std::string &benchmark_name);             \
+    static struct name##_register                                              \
+    {                                                                          \
+        name##_register()                                                      \
+        {                                                                      \
+            valfuzz::add_benchmark(pretty_name, name);                         \
+        }                                                                      \
+    } name##_register_instance;                                                \
+    void name([[maybe_unused]] const std::string &benchmark_name)
+
+#define RUN_BENCHMARK(expr)                                                    \
+    {                                                                          \
+        std::cout << std::flush;                                               \
+        std::chrono::duration<double> average;                                 \
+        for (int i = 0; i < valfuzz::get_num_iterations_benchmark(); i++)      \
+        {                                                                      \
+            auto start = std::chrono::high_resolution_clock::now();            \
+            expr;                                                              \
+            auto end = std::chrono::high_resolution_clock::now();              \
+            std::chrono::duration<double> elapsed = end - start;               \
+            average += elapsed;                                                \
+        }                                                                      \
+        std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
+        std::print("benchmark: \"{}\", time: {}s \n", benchmark_name,          \
+                   average.count() / valfuzz::get_num_iterations_benchmark()); \
+        std::cout << std::flush;                                               \
+    }
+
+typedef std::function<void(std::string)> benchmark_function;
+typedef std::pair<std::string, benchmark_function> benchmark_pair;
+
+unsigned long get_cache_l3_size();
+bool &get_do_benchmarks();
+int &get_num_iterations_benchmark();
+unsigned long get_num_benchmarks();
+std::deque<benchmark_pair> &get_benchmarks();
+void add_benchmark(const std::string &name, benchmark_function benchmark);
+void set_do_benchmarks(bool do_benchmarks);
+void set_num_iterations_benchmark(int num_iterations_benchmark);
+
+void run_benchmarks();
 
 } // namespace valfuzz
