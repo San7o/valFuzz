@@ -600,7 +600,9 @@ void set_num_iterations_benchmark(int num_iterations)
 void run_benchmarks()
 {
     const size_t bigger_than_cachesize = get_cache_l3_size() * 2;
-    long *p = new long[bigger_than_cachesize];
+    long *p;
+    if (bigger_than_cachesize != 0)
+        p = new long[bigger_than_cachesize];
     {
         std::lock_guard<std::mutex> lock(get_stream_mutex());
         std::print("Cache size: {}\n", get_cache_l3_size());
@@ -619,15 +621,16 @@ void run_benchmarks()
             std::cout << std::flush;
         }
         else
+        // this is needed or the benchmark will totally be shit, don't ask me why
         {
-
             std::lock_guard<std::mutex> lock(get_stream_mutex());
             std::print("");
             std::cout << std::flush;
         }
         benchmark.second(benchmark.first);
     }
-    delete[] p;
+    if (bigger_than_cachesize != 0)
+        delete[] p;
 }
 
 } // namespace valfuzz

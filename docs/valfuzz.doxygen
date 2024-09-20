@@ -143,6 +143,45 @@
 /// ./my_test --fuzz
 /// ```
 ///
+/// \subsection benchmarking Benchmarking
+///
+/// You can define a benchmark function with the macro `BENCHMARK`. Inside the benchmark, you can
+/// do any setup / cleanup and run an expression to be benchmarked with `BENCHMARK_RUN`.
+/// 
+/// > currently, the cache will be reset between benchmarks only on linux
+/// 
+/// For example:
+/// ```cpp
+/// int sum_slow(int a, int b)
+/// {
+///     int sum = 0;
+///     for (int i = 0; i < a; i++)
+///     {
+///         sum += b;
+///     }
+///     return sum;
+/// }
+/// 
+/// BENCHMARK(bench_sum_slow, "Sum slow benchmark")
+/// {
+///     int a = 1;
+///     int b = 2;
+///     RUN_BENCHMARK(sum_slow(a, b));
+/// }
+/// ```
+/// 
+/// Compile and run with `--benchmark` flag:
+/// ```bash
+/// ./build/valfuzz --benchmark --verbose
+/// ```
+/// ```
+/// Running benchmark: Sum slow benchmark
+/// benchmark: "Sum slow benchmark", time: 1.6342204000065603e-08s
+/// ```
+/// 
+/// The benchmark will be run 100000 times to get the average time. You
+/// can set the number of iterations using the `--num-iterations` flag.
+///
 /// \subsection multithreading Multithreading
 ///
 /// All tests and fuzz functions are run on multiple threads by default. You can disable multithreading
@@ -153,6 +192,8 @@
 /// - `--test <test_name>` - Run a specific test by name.
 /// - `--fuzz            ` - Run all fuzz functions.
 /// - `--fuzz <fuzz_name>` - Run a specific fuzz function by name.
+/// - `--benchmark` - Run benchmarks.
+/// - `--num-iterations <num>` - Set the number of iterations for benchmarks.
 /// - `--no-multithread` - Disable multithreading.
 /// - `--verbose` - Enable verbose output.
 /// - `--max-threads <n>` - Set the maximum number of threads to use.

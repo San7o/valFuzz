@@ -15,7 +15,7 @@ Seed: 1726579491
 Running 1337 tests...
 ```
 
-valFuzz (or val-di-Fuzz) is a modern cross-platform testing and fuzzing library for C++23. Check out [tests](./tests) for some examples on how to use this library, or read the online documentation [here](https://san7o.github.io/brenta-engine-documentation/valfuzz/v1.0/).
+valFuzz (or val-di-Fuzz) is a modern cross-platform testing, fuzzing and benchmarking library for C++23. Check out [tests](./tests) for some examples on how to use this library, or read the online documentation [here](https://san7o.github.io/brenta-engine-documentation/valfuzz/v1.0/).
 
 > valFuzz is the official testing library for [Brenta Engine](https://github.com/San7o/Brenta-Engine).
 
@@ -40,6 +40,8 @@ Options:
   --test <name>: run a specific test
   --fuzz: run fuzz tests
   --fuzz-one <name>: run a specific fuzz test
+  --benchmark: run benchmarks
+  --num-iterations <num>: set the number of iterations for benchmarks
   --no-multithread: run tests in a single thread
   --verbose: print test names
   --max-threads <num>: set the maximum number of threads
@@ -147,6 +149,45 @@ Iterations: 2000000
 Iterations: 3000000
 ...
 ```
+
+## Benchmarks
+
+You can define a benchmark function with the macro `BENCHMARK`. Inside the benchmark, you can
+do any setup / cleanup and run an expression to be benchmarked with `BENCHMARK_RUN`.
+
+> currently, the cache will be reset between benchmarks only on linux
+
+For example:
+```c++
+int sum_slow(int a, int b)
+{
+    int sum = 0;
+    for (int i = 0; i < a; i++)
+    {
+        sum += b;
+    }
+    return sum;
+}
+
+BENCHMARK(bench_sum_slow, "Sum slow benchmark")
+{
+    int a = 1;
+    int b = 2;
+    RUN_BENCHMARK(sum_slow(a, b));
+}
+```
+
+Compile and run with `--benchmark` flag:
+```bash
+./build/valfuzz --benchmark --verbose
+```
+```
+Running benchmark: Sum slow benchmark
+benchmark: "Sum slow benchmark", time: 1.6342204000065603e-08s
+```
+
+The benchmark will be run 100000 times to get the average time. You
+can set the number of iterations using the `--num-iterations` flag.
 
 # License
 
