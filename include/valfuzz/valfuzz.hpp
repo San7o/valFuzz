@@ -268,14 +268,14 @@ void run_fuzz_tests();
     } name##_register_instance;                                                \
     void name([[maybe_unused]] const std::string &benchmark_name)
 
-#define RUN_BENCHMARK(expr)                                                    \
+#define RUN_BENCHMARK(...)                                                     \
     {                                                                          \
         std::cout << std::flush;                                               \
         std::chrono::duration<double> average;                                 \
         for (int i = 0; i < valfuzz::get_num_iterations_benchmark(); i++)      \
         {                                                                      \
             auto start = std::chrono::high_resolution_clock::now();            \
-            expr;                                                              \
+            __VA_ARGS__;                                                       \
             auto end = std::chrono::high_resolution_clock::now();              \
             std::chrono::duration<double> elapsed = end - start;               \
             average += elapsed;                                                \
