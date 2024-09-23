@@ -7,6 +7,8 @@ option(VALFUZZ_USE_CLANG "Use clang compiler" OFF)
 option(VALFUZZ_BUILD_TESTS "Build tests" ON)
 option(VALFUZZ_BUILD_SHARED "Build shared library" OFF)
 option(VALFUZZ_BUILD_STATIC "Build static library" OFF)
+option(VALFUZZ_BUILD_CLOCK_PRECISION "Build an executable to
+                          get the best clock's precision" OFF)
 
 set(VALFUZZ_INCLUDES)
 set(VALFUZZ_SOURCES)
@@ -48,4 +50,7 @@ if (VALFUZZ_BUILD_TESTS)
     target_include_directories(asserts_test PRIVATE ${VALFUZZ_INCLUDES})
     target_compile_options(asserts_test PRIVATE ${VALFUZZ_COMPILE_OPTIONS})
 endif()
-
+if (VALFUZZ_BUILD_CLOCK_PRECISION)
+    add_executable(clock_precision utils/clock_precision.cpp)
+    target_compile_options(clock_precision PRIVATE ${VALFUZZ_COMPILE_OPTIONS})
+endif()
