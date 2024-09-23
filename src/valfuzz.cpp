@@ -621,7 +621,8 @@ void run_benchmarks()
             std::cout << std::flush;
         }
         else
-        // this is needed or the benchmark will totally be shit, don't ask me why
+        // this is needed or the benchmark will totally be shit, don't ask me
+        // why
         {
             std::lock_guard<std::mutex> lock(get_stream_mutex());
             std::print("");

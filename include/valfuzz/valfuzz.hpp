@@ -271,7 +271,8 @@ void run_fuzz_tests();
 #define RUN_BENCHMARK(...)                                                     \
     {                                                                          \
         std::cout << std::flush;                                               \
-        std::chrono::duration<double> average;                                 \
+        std::chrono::duration<double> average =                                \
+            std::chrono::duration<double>::zero();                             \
         for (int i = 0; i < valfuzz::get_num_iterations_benchmark(); i++)      \
         {                                                                      \
             auto start = std::chrono::high_resolution_clock::now();            \
