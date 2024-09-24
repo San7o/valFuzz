@@ -45,6 +45,7 @@ Options:
   --benchmark: run benchmarks
   --num-iterations <num>: set the number of iterations for benchmarks
   --no-multithread: run tests in a single thread
+  --run-one-benchmark <name>: run a specific benchmark
   --verbose: print test names
   --max-threads <num>: set the maximum number of threads
   --no-header: do not print the header at the start
@@ -73,6 +74,14 @@ if (valfuzz_ADDED AND BRENTA_BUILD_TESTS)
     list(APPEND MY_INCLUDES ${valfuzz_SOURCE_DIR}/include)
     list(APPEND MY_SOURCES ${valfuzz_SOURCE_DIR}/src/valfuzz.cpp)
 endif()
+```
+
+### meson
+```
+[wrap-git]
+url = https://github.com/San7o/valFuzz
+revision = v1.0.2
+depth = 1
 ```
 
 ## Documentation
