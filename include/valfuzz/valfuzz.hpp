@@ -293,11 +293,16 @@ typedef std::pair<std::string, benchmark_function> benchmark_pair;
 unsigned long get_cache_l3_size();
 bool &get_do_benchmarks();
 int &get_num_iterations_benchmark();
+bool &get_run_one_benchmark();
+std::string &get_one_benchmark();
 unsigned long get_num_benchmarks();
 std::deque<benchmark_pair> &get_benchmarks();
+
 void add_benchmark(const std::string &name, benchmark_function benchmark);
 void set_do_benchmarks(bool do_benchmarks);
 void set_num_iterations_benchmark(int num_iterations_benchmark);
+void set_run_one_benchmark(bool run_one_benchmark);
+void set_one_benchmark(const std::string &one_benchmark);
 
 void run_benchmarks();
 

@@ -33,6 +33,8 @@ valFuzz (or val-di-Fuzz) is a modern cross-platform testing, fuzzing and benchma
 
 - [x] fuzzing
 
+- [x] benchmarking
+
 # Usage
 ```
 Usage: valfuzz [options]

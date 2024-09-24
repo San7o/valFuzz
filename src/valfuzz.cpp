@@ -409,6 +409,30 @@ void parse_args(int argc, char *argv[])
                 i++;
             }
         }
+        else if (std::string(argv[i]) == "--run-one-benchmark")
+        {
+            if (i + 1 < argc)
+            {
+                bool found = false;
+                for (auto b : get_benchmarks())
+                {
+                    if (b.first == argv[i + 1])
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    std::print("Benchmark \"{}\" not found\n", argv[i + 1]);
+                    std::exit(1);
+                }
+                set_do_benchmarks(true);
+                set_run_one_benchmark(true);
+                set_one_benchmark(argv[i + 1]);
+                i++;
+            }
+        }
         else if (std::string(argv[i]) == "--no-multithread")
         {
             set_multithreaded(false);
@@ -439,6 +463,7 @@ void parse_args(int argc, char *argv[])
             std::print("  --benchmark: run benchmarks\n");
             std::print("  --num-iterations <num>: set the number of "
                        "iterations for benchmarks\n");
+            std::print("  --run-one-benchmark <name>: run a specific benchmark\n");
             std::print("  --no-multithread: run tests in a single thread\n");
             std::print("  --verbose: print test names\n");
             std::print(
@@ -579,6 +604,18 @@ unsigned long get_num_benchmarks()
     return benchmarks.size();
 }
 
+bool &get_run_one_benchmark()
+{
+    constinit static bool run_one_benchmark = false;
+    return run_one_benchmark;
+}
+
+std::string &get_one_benchmark()
+{
+    constinit static std::string one_benchmark = "";
+    return one_benchmark;
+}
+
 void add_benchmark(const std::string &name, benchmark_function benchmark)
 {
     auto &benchmarks = get_benchmarks();
@@ -595,6 +632,18 @@ void set_num_iterations_benchmark(int num_iterations)
 {
     auto &num_iterations_benchmark = get_num_iterations_benchmark();
     num_iterations_benchmark = num_iterations;
+}
+
+void set_run_one_benchmark(bool run_one_benchmark)
+{
+    auto &run_one_benchmark_ref = get_run_one_benchmark();
+    run_one_benchmark_ref = run_one_benchmark;
+}
+
+void set_one_benchmark(const std::string &one_benchmark)
+{
+    auto &one_benchmark_ref = get_one_benchmark();
+    one_benchmark_ref = one_benchmark;
 }
 
 void run_benchmarks()
@@ -614,6 +663,13 @@ void run_benchmarks()
         {
             p[i] = std::rand();
         }
+
+        if (get_run_one_benchmark())
+        {
+            if (benchmark.first != get_one_benchmark())
+                continue;
+        }
+
         if (get_verbose())
         {
             std::lock_guard<std::mutex> lock(get_stream_mutex());
