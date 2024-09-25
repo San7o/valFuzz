@@ -38,7 +38,6 @@
 #include <limits>
 #include <mutex>
 #include <optional>
-#include <print>
 #include <string>
 #include <thread>
 #include <tuple>
@@ -282,8 +281,9 @@ void run_fuzz_tests();
             average += elapsed;                                                \
         }                                                                      \
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
-        std::print("benchmark: \"{}\", time: {}s \n", benchmark_name,          \
-                   average.count() / valfuzz::get_num_iterations_benchmark()); \
+        std::cout << "benchmark: \"" << benchmark_name << "\", time: "         \
+                  << average.count() / valfuzz::get_num_iterations_benchmark() \
+                  << "s \n";                                                   \
         std::cout << std::flush;                                               \
     }
 

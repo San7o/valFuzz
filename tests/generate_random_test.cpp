@@ -32,7 +32,7 @@ TEST(random_int, "Generate a random int")
     if (valfuzz::get_verbose())
     {
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
-        std::print("Generated int: {}\n", generated);
+        std::cout << "Generated int: " << generated;
     }
     ASSERT_NE(generated, 0);
 }
@@ -43,7 +43,7 @@ TEST(random_float, "Generate a random float")
     if (valfuzz::get_verbose())
     {
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
-        std::print("Generated float: {}\n", generated);
+        std::cout << "Generated float: " << generated;
     }
     ASSERT_NE(generated, 0);
 }
@@ -54,7 +54,7 @@ TEST(random_double, "Generate a random double")
     if (valfuzz::get_verbose())
     {
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
-        std::print("Generated double: {}\n", generated);
+        std::cout << "Generated double: " << generated;
     }
     ASSERT_NE(generated, 0);
 }
@@ -65,7 +65,7 @@ TEST(random_char, "Generate a random char")
     if (valfuzz::get_verbose())
     {
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
-        std::print("Generated char: {}\n", generated);
+        std::cout << "Generated char: " << generated;
     }
     ASSERT_NE(generated, 0);
 }
@@ -76,7 +76,7 @@ TEST(random_bool, "Generate a random bool")
     if (valfuzz::get_verbose())
     {
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
-        std::print("Generated bool: {}\n", generated);
+        std::cout << "Generated bool: " << generated;
     }
 }
 
@@ -86,6 +86,6 @@ TEST(random_string, "Generate a random string")
     if (valfuzz::get_verbose())
     {
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
-        std::print("Generated string: {}\n", generated);
+        std::cout << "Generated string: " << generated;
     }
 }

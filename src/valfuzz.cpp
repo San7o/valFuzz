@@ -55,13 +55,19 @@ std::function<void()> &get_function_execute_after()
 
 std::mutex &get_tests_mutex()
 {
-    constinit static std::mutex tests_mutex;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::mutex tests_mutex;
     return tests_mutex;
 }
 
 std::mutex &get_stream_mutex()
 {
-    constinit static std::mutex stream_mutex;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::mutex stream_mutex;
     return stream_mutex;
 }
 
@@ -73,49 +79,73 @@ long unsigned int get_num_tests()
 
 std::atomic<bool> &get_is_threaded()
 {
-    constinit static std::atomic<bool> is_threaded = true;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::atomic<bool> is_threaded = true;
     return is_threaded;
 }
 
 std::vector<std::thread> &get_thread_pool()
 {
-    constinit static std::vector<std::thread> thread_pool;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::vector<std::thread> thread_pool;
     return thread_pool;
 }
 
 std::atomic<long unsigned int> &get_max_num_threads()
 {
-    constinit static std::atomic<long unsigned int> max_num_threads = 4;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::atomic<long unsigned int> max_num_threads = 4;
     return max_num_threads;
 }
 
 std::atomic<bool> &get_verbose()
 {
-    constinit static std::atomic<bool> verbose = false;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::atomic<bool> verbose = false;
     return verbose;
 }
 
 std::atomic<bool> &get_header()
 {
-    constinit static std::atomic<bool> header = true;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::atomic<bool> header = true;
     return header;
 }
 
 std::atomic<bool> &get_do_fuzzing()
 {
-    constinit static std::atomic<bool> do_fuzzing = false;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::atomic<bool> do_fuzzing = false;
     return do_fuzzing;
 }
 
 std::optional<std::string> &get_test_one()
 {
-    constinit static std::optional<std::string> test_one = std::nullopt;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::optional<std::string> test_one = std::nullopt;
     return test_one;
 }
 
 std::optional<std::string> &get_fuzz_one()
 {
-    constinit static std::optional<std::string> fuzz_one = std::nullopt;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::optional<std::string> fuzz_one = std::nullopt;
     return fuzz_one;
 }
 
@@ -218,7 +248,7 @@ void run_one_test(const std::string &name)
         {
             {
                 std::lock_guard<std::mutex> lock(get_stream_mutex());
-                std::print("Running test: {}\n", test.first);
+                std::cout << "Running test: " << test.first << "\n";
             }
             found = true;
             test.second(test.first);
@@ -228,7 +258,7 @@ void run_one_test(const std::string &name)
     if (!found)
     {
         std::lock_guard<std::mutex> lock(get_stream_mutex());
-        std::print("Test \"{}\" not found\n", name);
+        std::cout << "Test \"" << name << "\" not found\n";
         std::exit(1);
     }
 }
@@ -242,7 +272,7 @@ void _run_tests()
         if (get_verbose())
         {
             std::lock_guard<std::mutex> lock(get_stream_mutex());
-            std::print("Running test: \"{}\"\n", test.value().first);
+            std::cout << "Running test: \"" << test.value().first << "\"\n";
         }
         test.value().second(test.value().first);
     }
@@ -272,7 +302,10 @@ void run_tests()
 
 std::atomic<long unsigned int> &get_iterations()
 {
-    constinit static std::atomic<long unsigned int> iterations = 0;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::atomic<long unsigned int> iterations = 0;
     return iterations;
 }
 
@@ -316,13 +349,13 @@ void run_one_fuzz(const std::string &name)
     if (the_fuzz.empty())
     {
         std::lock_guard<std::mutex> lock(get_stream_mutex());
-        std::print("Fuzz test \"{}\" not found\n", name);
+        std::cout << "Fuzz test \"" << name << "\" not found\n";
         std::exit(1);
     }
     fuzzs = the_fuzz;
     {
         std::lock_guard<std::mutex> lock(get_stream_mutex());
-        std::print("Running fuzz test: {}\n", name);
+        std::cout << "Running fuzz test: " << name << "\n";
     }
 }
 
@@ -334,7 +367,7 @@ void _run_fuzz_tests()
         if (get_verbose())
         {
             std::lock_guard<std::mutex> lock(get_stream_mutex());
-            std::print("Running fuzz: \"{}\"\n", fuzz.value().first);
+            std::cout << "Running fuzz: \"" << fuzz.value().first << "\"\n";
         }
         fuzz.value().second(fuzz.value().first);
 
@@ -343,7 +376,7 @@ void _run_fuzz_tests()
         if (iterations % 1000000 == 0)
         {
             std::lock_guard<std::mutex> lock(get_stream_mutex());
-            std::print("Iterations: {}\n", iterations);
+            std::cout << "Iterations: " << iterations << "\n";
         }
 
         add_fuzz_test(fuzz.value().first, fuzz.value().second);
@@ -424,7 +457,8 @@ void parse_args(int argc, char *argv[])
                 }
                 if (!found)
                 {
-                    std::print("Benchmark \"{}\" not found\n", argv[i + 1]);
+                    std::cout << "Benchmark \"" << argv[i + 1]
+                              << "\" not found\n";
                     std::exit(1);
                 }
                 set_do_benchmarks(true);
@@ -455,26 +489,28 @@ void parse_args(int argc, char *argv[])
         }
         else if (std::string(argv[i]) == "--help")
         {
-            std::print("Usage: valfuzz [options]\n");
-            std::print("Options:\n");
-            std::print("  --test <name>: run a specific test\n");
-            std::print("  --fuzz: run fuzz tests\n");
-            std::print("  --fuzz-one <name>: run a specific fuzz test\n");
-            std::print("  --benchmark: run benchmarks\n");
-            std::print("  --num-iterations <num>: set the number of "
-                       "iterations for benchmarks\n");
-            std::print("  --run-one-benchmark <name>: run a specific benchmark\n");
-            std::print("  --no-multithread: run tests in a single thread\n");
-            std::print("  --verbose: print test names\n");
-            std::print(
-                "  --max-threads <num>: set the maximum number of threads\n");
-            std::print("  --no-header: do not print the header at the start\n");
-            std::print("  --help: print this help message\n");
+            std::cout << "Usage: valfuzz [options]\n";
+            std::cout << "Options:\n";
+            std::cout << "  --test <name>: run a specific test\n";
+            std::cout << "  --fuzz: run fuzz tests\n";
+            std::cout << "  --fuzz-one <name>: run a specific fuzz test\n";
+            std::cout << "  --benchmark: run benchmarks\n";
+            std::cout << "  --num-iterations <num>: set the number of "
+                         "iterations for benchmarks\n";
+            std::cout
+                << "  --run-one-benchmark <name>: run a specific benchmark\n";
+            std::cout << "  --no-multithread: run tests in a single thread\n";
+            std::cout << "  --verbose: print test names\n";
+            std::cout
+                << "  --max-threads <num>: set the maximum number of threads\n";
+            std::cout
+                << "  --no-header: do not print the header at the start\n";
+            std::cout << "  --help: print this help message\n";
             std::exit(0);
         }
         else
         {
-            std::print("Unknown option: {}\n", argv[i]);
+            std::cout << "Unknown option: " << argv[i] << "\n";
             std::exit(1);
         }
     }
@@ -496,14 +532,14 @@ void print_header()
     bool do_benchmarks = get_do_benchmarks();
     long unsigned int max_num_threads = get_max_num_threads();
     std::lock_guard<std::mutex> lock(get_stream_mutex());
-    std::print("{}", valfuzz_banner);
-    std::print("Settings:\n");
-    std::print(" - Multithreaded: {}\n", is_threaded);
-    std::print(" - Max threads: {}\n", max_num_threads);
-    std::print(" - Run Fuzzs: {}\n", do_fuzzing);
-    std::print(" - Run Benchmarks: {}\n", do_benchmarks);
-    std::print(" - Verbose: {}\n", verbose);
-    std::print("\n");
+    std::cout << valfuzz_banner;
+    std::cout << "Settings:\n";
+    std::cout << " - Multithreaded: " << is_threaded << "\n";
+    std::cout << " - Max threads: " << max_num_threads << "\n";
+    std::cout << " - Run Fuzzs: " << do_fuzzing << "\n";
+    std::cout << " - Run Benchmarks: " << do_benchmarks << "\n";
+    std::cout << " - Verbose: " << verbose << "\n";
+    std::cout << "\n";
 }
 
 template <> int get_random<int>()
@@ -582,7 +618,10 @@ unsigned long get_cache_l3_size()
 
 bool &get_do_benchmarks()
 {
-    constinit static bool do_benchmarks = false;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static bool do_benchmarks = false;
     return do_benchmarks;
 }
 
@@ -594,7 +633,10 @@ std::deque<benchmark_pair> &get_benchmarks()
 
 int &get_num_iterations_benchmark()
 {
-    constinit static int num_iterations_benchmark = 100000;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static int num_iterations_benchmark = 100000;
     return num_iterations_benchmark;
 }
 
@@ -606,13 +648,19 @@ unsigned long get_num_benchmarks()
 
 bool &get_run_one_benchmark()
 {
-    constinit static bool run_one_benchmark = false;
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static bool run_one_benchmark = false;
     return run_one_benchmark;
 }
 
 std::string &get_one_benchmark()
 {
-    constinit static std::string one_benchmark = "";
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::string one_benchmark = "";
     return one_benchmark;
 }
 
@@ -654,7 +702,7 @@ void run_benchmarks()
         p = new long[bigger_than_cachesize];
     {
         std::lock_guard<std::mutex> lock(get_stream_mutex());
-        std::print("Cache size: {}\n", get_cache_l3_size());
+        std::cout << "Cache size: " << get_cache_l3_size() << "\n";
     }
     for (auto &benchmark : get_benchmarks())
     {
@@ -673,7 +721,7 @@ void run_benchmarks()
         if (get_verbose())
         {
             std::lock_guard<std::mutex> lock(get_stream_mutex());
-            std::print("Running benchmark: {}\n", benchmark.first);
+            std::cout << "Running benchmark: " << benchmark.first << "\n";
             std::cout << std::flush;
         }
         else
@@ -681,7 +729,6 @@ void run_benchmarks()
         // why
         {
             std::lock_guard<std::mutex> lock(get_stream_mutex());
-            std::print("");
             std::cout << std::flush;
         }
         benchmark.second(benchmark.first);
@@ -707,8 +754,8 @@ int main(int argc, char **argv)
     {
         {
             std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
-            std::print("Running {} benchmarks...\n",
-                       valfuzz::get_num_benchmarks());
+            std::cout << "Running " << valfuzz::get_num_benchmarks()
+                      << " benchmarks...\n";
         }
         valfuzz::run_benchmarks();
     }
@@ -722,8 +769,9 @@ int main(int argc, char **argv)
         {
             {
                 std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
-                std::print("Seed: {}\n", seed);
-                std::print("Running {} tests...\n", valfuzz::get_num_tests());
+                std::cout << "Seed: " << seed << "\n";
+                std::cout << "Running " << valfuzz::get_num_tests()
+                          << " tests...\n";
             }
             valfuzz::run_tests();
         }
@@ -737,15 +785,15 @@ int main(int argc, char **argv)
         else
         {
             std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
-            std::print("Seed: {}\n", seed);
-            std::print("Running {} fuzz tests...\n",
-                       valfuzz::get_num_fuzz_tests());
+            std::cout << "Seed: " << seed << "\n";
+            std::cout << "Running " << valfuzz::get_num_fuzz_tests()
+                      << " fuzz tests...\n";
         }
         valfuzz::run_fuzz_tests();
     }
 
     valfuzz::get_function_execute_after()();
-    std::print("Done\n");
+    std::cout << "Done\n";
 
     return 0;
 }
