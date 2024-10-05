@@ -60,6 +60,11 @@ a shared or static library with the following flags:
 cmake -Bbuild -DVALFUZZ_BUILD_SHARED=ON -DVALFUZZ_BUILD_STATIC=ON
 ```
 
+### bazel (experimental)
+```
+bazel build //src:libvalfuzz --sandbox_debug --verbose_failures
+```
+
 ### cpm
 You can easily use [cpm](https://github.com/cpm-cmake/CPM.cmake) to include
 the library in your project.

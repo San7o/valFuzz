@@ -27,12 +27,21 @@
           packages = with pkgsFor.${system}; [
             gcc14                   # compiler
             cmake                   # build system
+            meson                   # build system
+            ninja                   # build system
+            bazel_6                 # build system
+            ccache                  # compiler cache
             valgrind                # memory debugger
+            python312               # scripting
+            python312Packages.pip   # python package manager
+            clang-tools             # code formatting
             gdb                     # debugger
             doxygen                 # documentation
+            pre-commit              # git hooks
             libz.dev                # compression
+            cppcheck                # static analysis
             llvmPackages.libcxxClang
-            llvmPackages_19.clang-tools
+            stdenv.cc.cc.lib
           ];
           shellHook = ''
               zsh
