@@ -25,6 +25,7 @@
  */
 
 #include "valfuzz/valfuzz.hpp"
+#include <random>
 
 namespace valfuzz
 {
@@ -557,7 +558,7 @@ void print_header()
     std::cout << "\n";
 }
 
-template <> int get_random<int>()
+template <> __attribute__((noinline)) int get_random<int>()
 {
     return std::rand();
 }

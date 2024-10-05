@@ -235,10 +235,7 @@ void run_tests();
 
 #define MAX_RANDOM_STRING_LEN 1024
 
-template <typename T> T get_random()
-{
-    return T();
-}
+template <typename T> T get_random();
 
 #define FUZZME(fun_name, pretty_name)                                          \
     void fun_name([[maybe_unused]] const std::string &test_name);              \
