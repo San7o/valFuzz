@@ -61,11 +61,6 @@ TEST(simple_assertion_ge, "Simple Assertion GE")
     ASSERT_GE(1, 1);
 }
 
-TEST(simple_assertion_fail, "Simple Assertion Fail")
-{
-    ASSERT(1 == 2);
-}
-
 void foo()
 {
     throw std::runtime_error("Error");
@@ -78,11 +73,6 @@ void bar()
 TEST(shoud_throw, "Should Throw")
 {
     ASSERT_THROW(foo(), std::runtime_error);
-}
-
-TEST(shoud_not_throw_fail, "Should Not Throw Fail")
-{
-    ASSERT_NO_THROW(foo());
 }
 
 TEST(shoud_not_throw, "Should Not Throw")

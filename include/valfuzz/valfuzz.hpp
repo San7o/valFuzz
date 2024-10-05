@@ -56,6 +56,7 @@ namespace valfuzz
 #define ASSERT(cond)                                                           \
     if (!(cond))                                                               \
     {                                                                          \
+        valfuzz::set_has_failed_once(true);                                    \
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
         std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";  \
         std::cerr << "Assertion failed: " << #cond << std::endl;               \
@@ -64,6 +65,7 @@ namespace valfuzz
 #define ASSERT_EQ(a, b)                                                        \
     if ((a) != (b))                                                            \
     {                                                                          \
+        valfuzz::set_has_failed_once(true);                                    \
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
         std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";  \
         std::cerr << "Assertion failed: " << #a << " != " << #b << std::endl;  \
@@ -72,6 +74,7 @@ namespace valfuzz
 #define ASSERT_NE(a, b)                                                        \
     if ((a) == (b))                                                            \
     {                                                                          \
+        valfuzz::set_has_failed_once(true);                                    \
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
         std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";  \
         std::cerr << "Assertion failed: " << #a << " == " << #b << std::endl;  \
@@ -80,6 +83,7 @@ namespace valfuzz
 #define ASSERT_LT(a, b)                                                        \
     if ((a) >= (b))                                                            \
     {                                                                          \
+        valfuzz::set_has_failed_once(true);                                    \
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
         std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";  \
         std::cerr << "Assertion failed: " << #a << " < " << #b << std::endl;   \
@@ -88,6 +92,7 @@ namespace valfuzz
 #define ASSERT_LE(a, b)                                                        \
     if ((a) > (b))                                                             \
     {                                                                          \
+        valfuzz::set_has_failed_once(true);                                    \
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
         std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";  \
         std::cerr << "Assertion failed: " << #a << " <= " << #b << std::endl;  \
@@ -96,6 +101,7 @@ namespace valfuzz
 #define ASSERT_GT(a, b)                                                        \
     if ((a) <= (b))                                                            \
     {                                                                          \
+        valfuzz::set_has_failed_once(true);                                    \
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
         std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";  \
         std::cerr << "Assertion failed: " << #a << " > " << #b << std::endl;   \
@@ -104,6 +110,7 @@ namespace valfuzz
 #define ASSERT_GE(a, b)                                                        \
     if ((a) < (b))                                                             \
     {                                                                          \
+        valfuzz::set_has_failed_once(true);                                    \
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
         std::cerr << "test: " << test_name << ", line: " << __LINE__ << ", ";  \
         std::cerr << "Assertion failed: " << #a << " >= " << #b << std::endl;  \
@@ -122,6 +129,7 @@ namespace valfuzz
         }                                                                      \
         if (!exception_thrown)                                                 \
         {                                                                      \
+            valfuzz::set_has_failed_once(true);                                \
             std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());     \
             std::cerr << "test: " << test_name << ", line: " << __LINE__       \
                       << ", ";                                                 \
@@ -137,6 +145,7 @@ namespace valfuzz
         }                                                                      \
         catch (...)                                                            \
         {                                                                      \
+            valfuzz::set_has_failed_once(true);                                \
             std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());     \
             std::cerr << "test: " << test_name << ", line: " << __LINE__       \
                       << ", ";                                                 \
@@ -173,12 +182,14 @@ std::deque<test_pair> &get_tests();
 std::vector<std::thread> &get_thread_pool();
 std::mutex &get_test_mutex();
 long unsigned int get_num_tests();
+std::atomic<bool> &get_has_failed_once();
 
 std::function<void()> &get_function_execute_before();
 std::function<void()> &get_function_execute_after();
 
 void set_function_execute_before(std::function<void()> f);
 void set_function_execute_after(std::function<void()> f);
+void set_has_failed_once(bool has_failed_once);
 
 void add_test(const std::string &name, test_function test);
 

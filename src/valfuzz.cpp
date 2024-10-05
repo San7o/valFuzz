@@ -149,6 +149,15 @@ std::optional<std::string> &get_fuzz_one()
     return fuzz_one;
 }
 
+std::atomic<bool> &get_has_failed_once()
+{
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+    static std::atomic<bool> has_failed_once = false;
+    return has_failed_once;
+}
+
 long unsigned int get_num_fuzz_tests()
 {
     auto &fuzzs = get_fuzzs();
@@ -207,6 +216,12 @@ void set_fuzz_one(const std::string &fuzz_one)
 {
     auto &fuzz_one_ref = get_fuzz_one();
     fuzz_one_ref = fuzz_one;
+}
+
+void set_has_failed_once(bool has_failed_once)
+{
+    auto &has_failed_once_ref = get_has_failed_once();
+    has_failed_once_ref = has_failed_once;
 }
 
 void add_test(const std::string &name, test_function test)
@@ -793,7 +808,15 @@ int main(int argc, char **argv)
     }
 
     valfuzz::get_function_execute_after()();
-    std::cout << "Done\n";
+
+    if (valfuzz::get_has_failed_once())
+    {
+        std::cout << "Failed\n";
+        return 1;
+    }
+    else {
+        std::cout << "Done\n";
+    }
 
     return 0;
 }
