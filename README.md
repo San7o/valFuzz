@@ -15,7 +15,7 @@ Seed: 1726579491
 Running 1337 tests...
 ```
 
-valFuzz (or val-di-Fuzz) is a modern cross-platform testing, fuzzing and benchmarking library for C++23. Check out [tests](./tests) for some examples on how to use this library, or read the online documentation [here](https://san7o.github.io/brenta-engine-documentation/valfuzz/v1.0/).
+valFuzz (or val-di-Fuzz) is a modern cross-platform testing, fuzzing and benchmarking library for C++17/20/23. Check out [tests](./tests) for some examples on how to use this library, or read the online documentation [here](https://san7o.github.io/brenta-engine-documentation/valfuzz/v1.0/).
 
 > valFuzz is the official testing library for [Brenta Engine](https://github.com/San7o/Brenta-Engine).
 
@@ -72,7 +72,7 @@ the library in your project.
 CPMAddPackage(
     NAME valfuzz
     GITHUB_REPOSITORY San7o/valFuzz
-    GIT_TAG v1.0.0
+    GIT_TAG v1.0.4
     DOWNLOAD_ONLY True
 )
 if (valfuzz_ADDED AND BRENTA_BUILD_TESTS)
@@ -85,7 +85,7 @@ endif()
 ```
 [wrap-git]
 url = https://github.com/San7o/valFuzz
-revision = v1.0.2
+revision = v1.0.4
 depth = 1
 ```
 

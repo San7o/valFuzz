@@ -25,7 +25,7 @@
           name = "gcc9-dev-shell";
           hardeningDisable = ["all"];
           packages = with pkgsFor.${system}; [
-            gcc9                   # compiler
+            gcc8                    # compiler
             cmake                   # build system
             valgrind                # memory debugger
             gdb                     # debugger
