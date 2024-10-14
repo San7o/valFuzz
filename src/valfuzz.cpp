@@ -25,6 +25,7 @@
  */
 
 #include "valfuzz/valfuzz.hpp"
+
 #include <random>
 
 namespace valfuzz
@@ -59,7 +60,7 @@ std::mutex &get_tests_mutex()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::mutex tests_mutex;
+        static std::mutex tests_mutex;
     return tests_mutex;
 }
 
@@ -68,7 +69,7 @@ std::mutex &get_stream_mutex()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::mutex stream_mutex;
+        static std::mutex stream_mutex;
     return stream_mutex;
 }
 
@@ -83,7 +84,8 @@ std::atomic<bool> &get_is_threaded()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::atomic<bool> is_threaded = true;
+        static std::atomic<bool>
+            is_threaded = true;
     return is_threaded;
 }
 
@@ -92,7 +94,8 @@ std::vector<std::thread> &get_thread_pool()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::vector<std::thread> thread_pool;
+        static std::vector<std::thread>
+            thread_pool;
     return thread_pool;
 }
 
@@ -101,7 +104,8 @@ std::atomic<long unsigned int> &get_max_num_threads()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::atomic<long unsigned int> max_num_threads = 4;
+        static std::atomic<long unsigned int>
+            max_num_threads = 4;
     return max_num_threads;
 }
 
@@ -110,7 +114,8 @@ std::atomic<bool> &get_verbose()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::atomic<bool> verbose = false;
+        static std::atomic<bool>
+            verbose = false;
     return verbose;
 }
 
@@ -119,7 +124,8 @@ std::atomic<bool> &get_header()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::atomic<bool> header = true;
+        static std::atomic<bool>
+            header = true;
     return header;
 }
 
@@ -128,7 +134,8 @@ std::atomic<bool> &get_do_fuzzing()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::atomic<bool> do_fuzzing = false;
+        static std::atomic<bool>
+            do_fuzzing = false;
     return do_fuzzing;
 }
 
@@ -137,7 +144,8 @@ std::optional<std::string> &get_test_one()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::optional<std::string> test_one = std::nullopt;
+        static std::optional<std::string>
+            test_one = std::nullopt;
     return test_one;
 }
 
@@ -146,7 +154,8 @@ std::optional<std::string> &get_fuzz_one()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::optional<std::string> fuzz_one = std::nullopt;
+        static std::optional<std::string>
+            fuzz_one = std::nullopt;
     return fuzz_one;
 }
 
@@ -155,7 +164,8 @@ std::atomic<bool> &get_has_failed_once()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::atomic<bool> has_failed_once = false;
+        static std::atomic<bool>
+            has_failed_once = false;
     return has_failed_once;
 }
 
@@ -321,7 +331,8 @@ std::atomic<long unsigned int> &get_iterations()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::atomic<long unsigned int> iterations = 0;
+        static std::atomic<long unsigned int>
+            iterations = 0;
     return iterations;
 }
 
@@ -418,117 +429,6 @@ void run_fuzz_tests()
     else
     {
         _run_fuzz_tests();
-    }
-}
-
-void parse_args(int argc, char *argv[])
-{
-    for (int i = 1; i < argc; i++)
-    {
-        if (std::string(argv[i]) == "--test")
-        {
-            if (i + 1 < argc)
-            {
-                set_test_one(argv[i + 1]);
-                i++;
-            }
-        }
-        else if (std::string(argv[i]) == "--fuzz")
-        {
-            set_do_fuzzing(true);
-        }
-        else if (std::string(argv[i]) == "--fuzz-one")
-        {
-            if (i + 1 < argc)
-            {
-                set_do_fuzzing(true);
-                set_fuzz_one(argv[i + 1]);
-                i++;
-            }
-        }
-        else if (std::string(argv[i]) == "--benchmark")
-        {
-            set_do_benchmarks(true);
-        }
-        else if (std::string(argv[i]) == "--num-iterations")
-        {
-            if (i + 1 < argc)
-            {
-                set_num_iterations_benchmark(std::stoi(argv[i + 1]));
-                i++;
-            }
-        }
-        else if (std::string(argv[i]) == "--run-one-benchmark")
-        {
-            if (i + 1 < argc)
-            {
-                bool found = false;
-                for (auto b : get_benchmarks())
-                {
-                    if (b.first == argv[i + 1])
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                {
-                    std::cout << "Benchmark \"" << argv[i + 1]
-                              << "\" not found\n";
-                    std::exit(1);
-                }
-                set_do_benchmarks(true);
-                set_run_one_benchmark(true);
-                set_one_benchmark(argv[i + 1]);
-                i++;
-            }
-        }
-        else if (std::string(argv[i]) == "--no-multithread")
-        {
-            set_multithreaded(false);
-        }
-        else if (std::string(argv[i]) == "--verbose")
-        {
-            set_verbose(true);
-        }
-        else if (std::string(argv[i]) == "--max-threads")
-        {
-            if (i + 1 < argc)
-            {
-                set_max_num_threads(std::stoul(argv[i + 1]));
-                i++;
-            }
-        }
-        else if (std::string(argv[i]) == "--no-header")
-        {
-            set_header(false);
-        }
-        else if (std::string(argv[i]) == "--help")
-        {
-            std::cout << "Usage: valfuzz [options]\n";
-            std::cout << "Options:\n";
-            std::cout << "  --test <name>: run a specific test\n";
-            std::cout << "  --fuzz: run fuzz tests\n";
-            std::cout << "  --fuzz-one <name>: run a specific fuzz test\n";
-            std::cout << "  --benchmark: run benchmarks\n";
-            std::cout << "  --num-iterations <num>: set the number of "
-                         "iterations for benchmarks\n";
-            std::cout
-                << "  --run-one-benchmark <name>: run a specific benchmark\n";
-            std::cout << "  --no-multithread: run tests in a single thread\n";
-            std::cout << "  --verbose: print test names\n";
-            std::cout
-                << "  --max-threads <num>: set the maximum number of threads\n";
-            std::cout
-                << "  --no-header: do not print the header at the start\n";
-            std::cout << "  --help: print this help message\n";
-            std::exit(0);
-        }
-        else
-        {
-            std::cout << "Unknown option: " << argv[i] << "\n";
-            std::exit(1);
-        }
     }
 }
 
@@ -637,7 +537,7 @@ bool &get_do_benchmarks()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static bool do_benchmarks = false;
+        static bool do_benchmarks = false;
     return do_benchmarks;
 }
 
@@ -652,7 +552,7 @@ int &get_num_iterations_benchmark()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static int num_iterations_benchmark = 100000;
+        static int num_iterations_benchmark = 100000;
     return num_iterations_benchmark;
 }
 
@@ -667,7 +567,7 @@ bool &get_run_one_benchmark()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static bool run_one_benchmark = false;
+        static bool run_one_benchmark = false;
     return run_one_benchmark;
 }
 
@@ -676,8 +576,43 @@ std::string &get_one_benchmark()
 #if __cplusplus >= 202002L // C++20
     constinit
 #endif
-    static std::string one_benchmark = "";
+        static std::string one_benchmark = "";
     return one_benchmark;
+}
+
+std::atomic<bool> &get_save_to_file()
+{
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+        static std::atomic<bool>
+            save_to_file = false;
+    return save_to_file;
+}
+
+std::ofstream &get_save_file()
+{
+    static std::ofstream output;
+    return output;
+}
+
+void set_save_to_file(bool save_to_file)
+{
+    auto &save_to_file_ref = get_save_to_file();
+    save_to_file_ref = save_to_file;
+}
+
+void set_save_file(const std::filesystem::path &output_dir)
+{
+    auto &output_dir_ref = get_save_file();
+    output_dir_ref = std::ofstream(output_dir);
+    if (!output_dir_ref.is_open())
+    {
+        std::lock_guard<std::mutex> lock(get_stream_mutex());
+        std::cout << "Could not open file " << output_dir << "\n";
+        std::exit(1);
+    }
+    output_dir_ref << "name,time,space\n";
 }
 
 void add_benchmark(const std::string &name, benchmark_function benchmark)
@@ -753,6 +688,137 @@ void run_benchmarks()
         delete[] p;
 }
 
+void parse_args(int argc, char *argv[])
+{
+    for (int i = 1; i < argc; i++)
+    {
+        if (std::string(argv[i]) == "--test")
+        {
+            if (i + 1 < argc)
+            {
+                set_test_one(argv[i + 1]);
+                i++;
+            }
+        }
+        else if (std::string(argv[i]) == "--fuzz")
+        {
+            set_do_fuzzing(true);
+        }
+        else if (std::string(argv[i]) == "--fuzz-one")
+        {
+            if (i + 1 < argc)
+            {
+                set_do_fuzzing(true);
+                set_fuzz_one(argv[i + 1]);
+                i++;
+            }
+        }
+        else if (std::string(argv[i]) == "--benchmark")
+        {
+            set_do_benchmarks(true);
+        }
+        else if (std::string(argv[i]) == "--num-iterations")
+        {
+            if (i + 1 < argc)
+            {
+                set_num_iterations_benchmark(std::stoi(argv[i + 1]));
+                i++;
+            }
+        }
+        else if (std::string(argv[i]) == "--run-one-benchmark")
+        {
+            if (i + 1 < argc)
+            {
+                bool found = false;
+                for (auto b : get_benchmarks())
+                {
+                    if (b.first == argv[i + 1])
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    std::cout << "Benchmark \"" << argv[i + 1]
+                              << "\" not found\n";
+                    std::exit(1);
+                }
+                set_do_benchmarks(true);
+                set_run_one_benchmark(true);
+                set_one_benchmark(argv[i + 1]);
+                i++;
+            }
+        }
+        else if (std::string(argv[i]) == "--report")
+        {
+            set_save_to_file(true);
+            if (i + 1 < argc)
+            {
+                set_save_file(argv[i + 1]);
+                i++;
+            }
+        }
+        else if (std::string(argv[i]) == "--no-multithread")
+        {
+            set_multithreaded(false);
+        }
+        else if (std::string(argv[i]) == "--verbose")
+        {
+            set_verbose(true);
+        }
+        else if (std::string(argv[i]) == "--max-threads")
+        {
+            if (i + 1 < argc)
+            {
+                set_max_num_threads(std::stoul(argv[i + 1]));
+                i++;
+            }
+        }
+        else if (std::string(argv[i]) == "--no-header")
+        {
+            set_header(false);
+        }
+        else if (std::string(argv[i]) == "--help")
+        {
+            std::cout << valfuzz_banner << "\n";
+            std::cout << "Usage: valfuzz [options]\n";
+            std::cout << "Options:\n";
+            std::cout << "\n";
+            std::cout << " TESTS \n";
+            std::cout << "  --test <name>: run a specific test\n";
+            std::cout << "  --no-multithread: run tests in a single thread\n";
+            std::cout
+                << "  --max-threads <num>: set the maximum number of threads\n";
+            std::cout << "\n";
+            std::cout << " FUZZING \n";
+            std::cout << "  --fuzz: run fuzz tests\n";
+            std::cout << "  --fuzz-one <name>: run a specific fuzz test\n";
+            std::cout << "\n";
+            std::cout << " BENCHMARK \n";
+            std::cout << "  --benchmark: run benchmarks\n";
+            std::cout << "  --num-iterations <num>: set the number of "
+                         "iterations for benchmarks\n";
+            std::cout
+                << "  --run-one-benchmark <name>: run a specific benchmark\n";
+            std::cout
+                << "  --report <file>: save benchmark results to a file\n";
+            std::cout << "\n";
+            std::cout << " GENERAL \n";
+            std::cout << "  --verbose: print test names\n";
+            std::cout
+                << "  --no-header: do not print the header at the start\n";
+            std::cout << "  --help: print this help message\n";
+            std::exit(0);
+        }
+        else
+        {
+            std::cout << "Unknown option: " << argv[i] << "\n";
+            std::exit(1);
+        }
+    }
+}
+
 } // namespace valfuzz
 
 int main(int argc, char **argv)
@@ -774,6 +840,12 @@ int main(int argc, char **argv)
                       << " benchmarks...\n";
         }
         valfuzz::run_benchmarks();
+        if (valfuzz::get_save_to_file())
+        {
+            std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
+            std::cout << "Saved results to file \n";
+            valfuzz::get_save_file().close();
+        }
     }
     else if (!valfuzz::get_do_fuzzing())
     {
@@ -815,7 +887,8 @@ int main(int argc, char **argv)
         std::cout << "Failed\n";
         return 1;
     }
-    else {
+    else
+    {
         std::cout << "Done\n";
     }
 

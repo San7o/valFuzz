@@ -32,6 +32,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <deque>
+#include <filesystem>
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -254,6 +255,11 @@ typedef std::pair<std::string, fuzz_function> fuzz_pair;
 std::deque<fuzz_pair> &get_fuzz_tests();
 std::atomic<long unsigned int> &get_iterations();
 long unsigned int get_num_fuzz_tests();
+std::atomic<bool> &get_save_to_file();
+std::ofstream &get_save_file();
+
+void set_save_to_file(bool save_to_file);
+void set_save_file(const std::filesystem::path &save_to_file_path);
 
 void increment_iterations();
 std::optional<fuzz_pair> pop_fuzz_or_null();
@@ -275,7 +281,8 @@ void run_fuzz_tests();
     } name##_register_instance;                                                \
     void name([[maybe_unused]] const std::string &benchmark_name)
 
-#define RUN_BENCHMARK(...)                                                     \
+// TODO: incremental iterations
+#define RUN_BENCHMARK(input_size, ...)                                                     \
     {                                                                          \
         std::cout << std::flush;                                               \
         std::chrono::duration<double> average =                                \
@@ -293,6 +300,13 @@ void run_fuzz_tests();
                   << average.count() / valfuzz::get_num_iterations_benchmark() \
                   << "s \n";                                                   \
         std::cout << std::flush;                                               \
+        if (valfuzz::get_save_to_file())                                       \
+        {                                                                      \
+            valfuzz::get_save_file()                                           \
+                << "\"" << benchmark_name << "\","                             \
+                << average.count() / valfuzz::get_num_iterations_benchmark()   \
+                << "," << input_size << "\n";                                                       \
+        }                                                                      \
     }
 
 typedef std::function<void(std::string)> benchmark_function;

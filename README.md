@@ -35,26 +35,37 @@ valFuzz (or val-di-Fuzz) is a modern cross-platform testing, fuzzing and benchma
 
 - [x] benchmarking
 
+- [x] produce benchmark report
+
 # Usage
 ```
 Usage: valfuzz [options]
 Options:
+
+ TESTS
   --test <name>: run a specific test
+  --no-multithread: run tests in a single thread
+  --max-threads <num>: set the maximum number of threads
+
+ FUZZING
   --fuzz: run fuzz tests
   --fuzz-one <name>: run a specific fuzz test
+
+ BENCHMARK
   --benchmark: run benchmarks
   --num-iterations <num>: set the number of iterations for benchmarks
-  --no-multithread: run tests in a single thread
   --run-one-benchmark <name>: run a specific benchmark
+  --save-to-file <file>: save benchmark results to a file
+
+ GENERAL
   --verbose: print test names
-  --max-threads <num>: set the maximum number of threads
   --no-header: do not print the header at the start
   --help: print this help message
 ```
 
-Copy [include/valfuzz/valfuzz.hpp](./include/valfuzz/valfuzz.hpp) and [src/valfuzz.cpp](./src/valfuzz.cpp)
-in your include and source directories respectively, or link to the shared library. You can compile
-a shared or static library with the following flags:
+## Compile shared library
+
+### cmake
 
 ```bash
 cmake -Bbuild -DVALFUZZ_BUILD_SHARED=ON -DVALFUZZ_BUILD_STATIC=ON
@@ -89,7 +100,7 @@ revision = v1.0.4
 depth = 1
 ```
 
-## Documentation
+# Documentation
 You can read a comprehensive documentation [here](https://san7o.github.io/brenta-engine-documentation/valfuzz/v1.0/). Here is presented a quick guide to showcase the library's api.
 
 ## Run tests
@@ -169,7 +180,10 @@ Iterations: 3000000
 ## Benchmarks
 
 You can define a benchmark function with the macro `BENCHMARK`. Inside the benchmark, you can
-do any setup / cleanup and run an expression to be benchmarked with `BENCHMARK_RUN`.
+do any setup / cleanup and run an expression to be benchmarked with `BENCHMARK_RUN(space, expr)`. The first argument is gonna be the space complecity, this will be used to 
+produce a report if you specified `--report <file>`; the second argument is
+the expression that will be evaluated. If you didn't specify a report file, you
+can set any value in the first argument.
 
 > currently, the cache will be reset between benchmarks only on linux
 
@@ -189,7 +203,7 @@ BENCHMARK(bench_sum_slow, "Sum slow benchmark")
 {
     int a = 1;
     int b = 2;
-    RUN_BENCHMARK(sum_slow(a, b));
+    RUN_BENCHMARK(1, sum_slow(a, b));
 }
 ```
 
@@ -204,6 +218,13 @@ benchmark: "Sum slow benchmark", time: 1.6342204000065603e-08s
 
 The benchmark will be run 100000 times to get the average time. You
 can set the number of iterations using the `--num-iterations` flag.
+If you specified `--report <file>`, a csv file will be generated
+with the following structure:
+```
+benchmark_name,average_time,space_complexity
+```
+You can quickly generate a graph with python by following the instructions
+in [plotting/README.md](plotting/README.md).
 
 # License
 
