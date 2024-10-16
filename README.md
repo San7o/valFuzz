@@ -55,7 +55,7 @@ Options:
   --benchmark: run benchmarks
   --num-iterations <num>: set the number of iterations for benchmarks
   --run-one-benchmark <name>: run a specific benchmark
-  --save-to-file <file>: save benchmark results to a file
+  --report <file>: save benchmark results to a file
 
  GENERAL
   --verbose: print test names
