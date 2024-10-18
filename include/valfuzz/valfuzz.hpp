@@ -281,8 +281,7 @@ void run_fuzz_tests();
     } name##_register_instance;                                                \
     void name([[maybe_unused]] const std::string &benchmark_name)
 
-// TODO: incremental iterations
-#define RUN_BENCHMARK(input_size, ...)                                                     \
+#define RUN_BENCHMARK(input_size, ...)                                         \
     {                                                                          \
         std::cout << std::flush;                                               \
         std::chrono::duration<double> average =                                \
@@ -305,7 +304,7 @@ void run_fuzz_tests();
             valfuzz::get_save_file()                                           \
                 << "\"" << benchmark_name << "\","                             \
                 << average.count() / valfuzz::get_num_iterations_benchmark()   \
-                << "," << input_size << "\n";                                                       \
+                << "," << input_size << "\n";                                  \
         }                                                                      \
     }
 
