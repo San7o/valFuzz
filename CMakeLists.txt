@@ -9,6 +9,8 @@ option(VALFUZZ_BUILD_SHARED "Build shared library" OFF)
 option(VALFUZZ_BUILD_STATIC "Build static library" OFF)
 option(VALFUZZ_BUILD_CLOCK_PRECISION "Build an executable to
                           get the best clock's precision" OFF)
+option(VALFUZZ_BUILD_OPTIMIZED "Build with optimizations" OFF)
+option(VALFUZZ_BUILD_OPTIMIZED_AGGRESSIVE "Build with aggressive optimizations" OFF)
 
 set(VALFUZZ_INCLUDES)
 set(VALFUZZ_SOURCES)
@@ -33,6 +35,13 @@ endif()
 if (VALFUZZ_BUILD_EXAMPLES)
     list(APPEND VALFUZZ_EXAMPLES_SOURCE
         examples/simple_fuzz.cpp)
+endif()
+
+if (VALFUZZ_BUILD_OPTIMIZED)
+    list(APPEND VALFUZZ_COMPILE_OPTIONS -O3)
+endif()
+if (VALFUZZ_BUILD_OPTIMIZED_AGGRESSIVE)
+    list(APPEND VALFUZZ_COMPILE_OPTIONS -O3 -march=native -Ofast)
 endif()
 
 if (VALFUZZ_BUILD_SHARED)
