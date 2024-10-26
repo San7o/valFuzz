@@ -1,4 +1,9 @@
-name,time,space
-"Sum arrays benchmark",2.17222e-07,400
-"Sum arrays benchmark",2.06721e-06,4000
-"Sum arrays benchmark",1.99074e-05,40000
+name,space,min,max,mean,sd
+"Sum slow benchmark",10000,1.7114e-05,2.5751e-05,1.8687e-05,1.29406e-06
+"Sum arrays benchmark",400,1.82e-07,3.9e-07,2.15223e-07,6.55632e-09
+"Sum arrays benchmark",4000,1.949e-06,8e-06,1.99823e-06,2.15999e-07
+"Sum arrays benchmark",40000,1.9631e-05,3.3661e-05,2.0121e-05,1.27743e-06
+"Matrix multiply benchmark",4000000,0.00303082,0.00420938,0.00305252,6.70054e-05
+"Insertion sort benchmark",40,1.31e-07,7.203e-06,1.50104e-07,2.51258e-07
+"Insertion sort benchmark",400,1.1388e-05,3.192e-05,1.18953e-05,1.61927e-06
+"Insertion sort benchmark",4000,0.00110677,0.00358856,0.00112569,8.91398e-05

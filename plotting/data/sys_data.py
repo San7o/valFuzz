@@ -5,11 +5,11 @@ class sys_data:
     """
 
     megabyte = 1024 * 1024
-    # sudo dmidecode --type 17 | grep "Memory Speed"
-    memory_clock_rate = 3200 * megabyte  # bT/s
+    # sudo dmidecode --type 17 | grep "Configured Memory Speed"
+    memory_clock_rate = 3200 * megabyte  # BT/s
     # sudo lshw -C display | grep width
-    bus_width = 64
-    transfer_rate = 2  # since is DDR
+    bus_width = 64  # bits
+    transfer_rate = 2  # 2 for is DDR
 
     peak_theoretical_bandwidth = \
-        memory_clock_rate * bus_width * transfer_rate / 10e9  # b/s
+        memory_clock_rate * bus_width * transfer_rate / 10e9  # GB/s

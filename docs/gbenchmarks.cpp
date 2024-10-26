@@ -119,34 +119,32 @@ static void BM_matrix_multiply(benchmark::State &state)
 
 BENCHMARK(BM_matrix_multiply);
 
-void insertion_sort(int arr[], int n)
+void insertion_sort(int in[], int out[], int n)
 {
-    int i, key, j;
-    for (i = 1; i < n; i++)
+    for (int i = 0; i < n; i++)
     {
-        key = arr[i];
-        j = i - 1;
-
-        while (j >= 0 && arr[j] > key)
+        int j = i;
+        while (j > 0 && out[j - 1] > in[i])
         {
-            arr[j + 1] = arr[j];
-            j = j - 1;
+            out[j] = out[j - 1];
+            j--;
         }
-        arr[j + 1] = key;
+        out[j] = in[i];
     }
 }
 
 static void BM_insertion_sort(benchmark::State &state)
 {
-    int arr[10000];
-    for (int i = 0; i < 10000; i++)
+    int arr[1000];
+    int out[1000];
+    for (int i = 0; i < 1000; i++)
     {
-        arr[i] = 10000 - i;
+        arr[i] = 1000 - i;
     }
 
     for (auto _ : state)
     {
-        insertion_sort(arr, 10000);
+        insertion_sort(arr, out, 1000);
     }
 }
 

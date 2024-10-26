@@ -36,8 +36,8 @@ BENCHMARK(bench_sum_arrays, "Sum arrays benchmark")
         b[i] = i;
     }
     int sum = 0;
-    // RUN_BENCHMARK(100 * sizeof(int), sum_arr(a, b, 100, &sum));
-    // RUN_BENCHMARK(1000 * sizeof(int), sum_arr(a, b, 1000, &sum));
+    RUN_BENCHMARK(100 * sizeof(int), sum_arr(a, b, 100, &sum));
+    RUN_BENCHMARK(1000 * sizeof(int), sum_arr(a, b, 1000, &sum));
     RUN_BENCHMARK(10000 * sizeof(int), sum_arr(a, b, 10000, &sum));
 }
 
@@ -76,30 +76,30 @@ BENCHMARK(bench_matrix_multiply, "Matrix multiply benchmark")
     RUN_BENCHMARK(100 * 100 * 100 * sizeof(float), matrix_multiply(M, N, P, 100, 100, 100));
 }
 
-void insertion_sort(int arr[], int n)
+void insertion_sort(int in[], int out[], int n)
 {
-    int i, key, j;
-    for (i = 1; i < n; i++)
+    for (int i = 0; i < n; i++)
     {
-        key = arr[i];
-        j = i - 1;
-
-        while (j >= 0 && arr[j] > key)
+        int j = i;
+        while (j > 0 && out[j - 1] > in[i])
         {
-            arr[j + 1] = arr[j];
-            j = j - 1;
+            out[j] = out[j - 1];
+            j--;
         }
-        arr[j + 1] = key;
+        out[j] = in[i];
     }
 }
 
 BENCHMARK(bench_insertion_sort, "Insertion sort benchmark")
 {
     int arr[10000];
+    int out[10000];
     for (int i = 0; i < 10000; i++)
     {
         arr[i] = 10000 - i;
     }
 
-    RUN_BENCHMARK(10000 * sizeof(int), insertion_sort(arr, 10000));
+    RUN_BENCHMARK(10 * sizeof(int), insertion_sort(arr, out, 10));
+    RUN_BENCHMARK(100 * sizeof(int), insertion_sort(arr, out, 100));
+    RUN_BENCHMARK(1000 * sizeof(int), insertion_sort(arr, out, 1000));
 }
