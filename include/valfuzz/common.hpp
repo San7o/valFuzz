@@ -27,9 +27,9 @@
 #pragma once
 
 #include <atomic>
+#include <functional>
 #include <mutex>
 #include <string>
-#include <functional>
 #include <thread>
 
 namespace valfuzz

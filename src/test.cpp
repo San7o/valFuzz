@@ -165,5 +165,4 @@ void run_tests()
     }
 }
 
-
 } // namespace valfuzz

@@ -26,7 +26,13 @@
 
 #pragma once
 
+#include "valfuzz/benchmark.hpp"
+#include "valfuzz/common.hpp"
+#include "valfuzz/fuzz.hpp"
+#include "valfuzz/test.hpp"
+
 #include <atomic>
+#include <deque>
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -34,12 +40,6 @@
 #include <string>
 #include <thread>
 #include <tuple>
-#include <deque>
-
-#include "valfuzz/benchmark.hpp"
-#include "valfuzz/fuzz.hpp"
-#include "valfuzz/test.hpp"
-#include "valfuzz/common.hpp"
 
 namespace valfuzz
 {

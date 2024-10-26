@@ -26,7 +26,10 @@
 
 #pragma once
 
+#include "valfuzz/common.hpp"
+
 #include <atomic>
+#include <deque>
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -34,9 +37,6 @@
 #include <string>
 #include <thread>
 #include <tuple>
-#include <deque>
-
-#include "valfuzz/common.hpp"
 
 /* Assertions */
 

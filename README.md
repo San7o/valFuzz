@@ -213,8 +213,13 @@ Compile and run with `--benchmark` flag:
 ./build/valfuzz --benchmark --verbose
 ```
 ```
-Running benchmark: Sum slow benchmark
-benchmark: "Sum slow benchmark", time: 1.6342204000065603e-08s
+Running benchmark: Sum arrays benchmark
+benchmark: "Sum arrays benchmark"
+ - space: 40000
+ - min: 1.8971e-05s
+ - max: 4.9554e-05s
+ - mean: 1.99462e-05s
+ - standard deviation: 8.35139e-07s
 ```
 
 The benchmark will be run 100000 times to get the average time. You
@@ -222,7 +227,7 @@ can set the number of iterations using the `--num-iterations` flag.
 If you specified `--report <file>`, a csv file will be generated
 with the following structure:
 ```
-benchmark_name,average_time,space_complexity
+benchmark_name,space_complexity,min_time,max_time,mean,standard_deviation
 ```
 You can quickly generate a graph with python by following the instructions
 in [plotting/README.md](plotting/README.md).

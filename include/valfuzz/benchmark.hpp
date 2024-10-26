@@ -26,7 +26,10 @@
 
 #pragma once
 
+#include "valfuzz/common.hpp"
+
 #include <atomic>
+#include <cmath>
 #include <cstdlib>
 #include <ctime>
 #include <deque>
@@ -37,8 +40,6 @@
 #include <mutex>
 #include <string>
 #include <tuple>
-
-#include "valfuzz/common.hpp"
 
 namespace valfuzz
 {
@@ -61,27 +62,43 @@ namespace valfuzz
 #define RUN_BENCHMARK(input_size, ...)                                         \
     {                                                                          \
         std::cout << std::flush;                                               \
-        std::chrono::duration<double> average =                                \
+        std::chrono::duration<double> total =                                  \
             std::chrono::duration<double>::zero();                             \
+        double min = std::numeric_limits<double>::max();                       \
+        double max = -1.0;                                                     \
+        double mean = 0.0;                                                     \
+        double M2 = 0.0;                                                       \
         for (int i = 0; i < valfuzz::get_num_iterations_benchmark(); i++)      \
         {                                                                      \
             auto start = std::chrono::high_resolution_clock::now();            \
             __VA_ARGS__;                                                       \
             auto end = std::chrono::high_resolution_clock::now();              \
             std::chrono::duration<double> elapsed = end - start;               \
-            average += elapsed;                                                \
+            total += elapsed;                                                  \
+            double e = elapsed.count();                                        \
+            min = e < min ? e : min;                                           \
+            max = e > max ? e : max;                                           \
+            /* Welford's algorithm  */                                         \
+            double delta = e - mean;                                           \
+            mean += delta / (i + 1);                                           \
+            M2 += (e - mean) * delta;                                          \
         }                                                                      \
+        double variance = M2 / valfuzz::get_num_iterations_benchmark();        \
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
-        std::cout << "benchmark: \"" << benchmark_name << "\", time: "         \
-                  << average.count() / valfuzz::get_num_iterations_benchmark() \
+        std::cout << "benchmark: \"" << benchmark_name                         \
+                  << "\"\n - space: " << input_size << "\n - min: " << min     \
+                  << "s\n - max: " << max << "s\n - mean: "                    \
+                  << total.count() / valfuzz::get_num_iterations_benchmark()   \
+                  << "s\n - standard deviation: " << std::sqrt(variance)       \
                   << "s \n";                                                   \
         std::cout << std::flush;                                               \
         if (valfuzz::get_save_to_file())                                       \
         {                                                                      \
             valfuzz::get_save_file()                                           \
-                << "\"" << benchmark_name << "\","                             \
-                << average.count() / valfuzz::get_num_iterations_benchmark()   \
-                << "," << input_size << "\n";                                  \
+                << "\"" << benchmark_name << "\"," << input_size << "," << min \
+                << "," << max << ","                                           \
+                << total.count() / valfuzz::get_num_iterations_benchmark()     \
+                << "," << std::sqrt(variance) << "\n";                         \
         }                                                                      \
     }
 

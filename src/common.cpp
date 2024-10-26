@@ -87,5 +87,4 @@ std::vector<std::thread> &get_thread_pool()
     return thread_pool;
 }
 
-
 } // namespace valfuzz

@@ -145,7 +145,7 @@ void set_save_file(const std::filesystem::path &output_dir)
         std::cout << "Could not open file " << output_dir << "\n";
         std::exit(1);
     }
-    output_dir_ref << "name,time,space\n";
+    output_dir_ref << "name,space,min,max,mean,sd\n";
 }
 
 void add_benchmark(const std::string &name, benchmark_function benchmark)
@@ -220,6 +220,5 @@ void run_benchmarks()
     if (bigger_than_cachesize != 0)
         delete[] p;
 }
-
 
 } // namespace valfuzz
