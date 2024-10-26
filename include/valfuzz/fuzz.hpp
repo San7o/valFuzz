@@ -36,28 +36,40 @@
 #include <tuple>
 #include <deque>
 
-#include "valfuzz/benchmark.hpp"
-#include "valfuzz/fuzz.hpp"
-#include "valfuzz/test.hpp"
 #include "valfuzz/common.hpp"
 
 namespace valfuzz
 {
 
-std::atomic<bool> &get_header();
-std::atomic<bool> &get_do_fuzzing();
-std::optional<std::string> &get_test_one();
-std::optional<std::string> &get_fuzz_one();
+/* Fuzzer */
 
-void set_multithreaded(bool is_threaded);
-void set_max_num_threads(long unsigned int max_num_threads);
-void set_verbose(bool verbose);
-void set_header(bool header);
-void set_do_fuzzing(bool do_fuzzing);
-void set_test_one(const std::string &test_one);
-void set_fuzz_one(const std::string &fuzz_one);
+#define MAX_RANDOM_STRING_LEN 1024
 
-void parse_args(int argc, char *argv[]);
-void print_header();
+template <typename T> T get_random();
+
+#define FUZZME(fun_name, pretty_name)                                          \
+    void fun_name([[maybe_unused]] const std::string &test_name);              \
+    static struct fun_name##_register                                          \
+    {                                                                          \
+        fun_name##_register()                                                  \
+        {                                                                      \
+            valfuzz::add_fuzz_test(pretty_name, fun_name);                     \
+        }                                                                      \
+    } fun_name##_register_instance;                                            \
+    void fun_name([[maybe_unused]] const std::string &test_name)
+
+typedef std::function<void(std::string)> fuzz_function;
+typedef std::pair<std::string, fuzz_function> fuzz_pair;
+
+std::deque<fuzz_pair> &get_fuzzs();
+long unsigned int get_num_fuzz_tests();
+std::atomic<long unsigned int> &get_iterations();
+
+void increment_iterations();
+std::optional<fuzz_pair> pop_fuzz_or_null();
+void add_fuzz_test(const std::string &name, fuzz_function test);
+void run_one_fuzz(const std::string &name);
+void _run_fuzz_tests();
+void run_fuzz_tests();
 
 } // namespace valfuzz

@@ -27,37 +27,22 @@
 #pragma once
 
 #include <atomic>
-#include <fstream>
-#include <functional>
-#include <iostream>
 #include <mutex>
 #include <string>
+#include <functional>
 #include <thread>
-#include <tuple>
-#include <deque>
-
-#include "valfuzz/benchmark.hpp"
-#include "valfuzz/fuzz.hpp"
-#include "valfuzz/test.hpp"
-#include "valfuzz/common.hpp"
 
 namespace valfuzz
 {
 
-std::atomic<bool> &get_header();
-std::atomic<bool> &get_do_fuzzing();
-std::optional<std::string> &get_test_one();
-std::optional<std::string> &get_fuzz_one();
+typedef std::function<void(std::string)> test_function;
+typedef std::pair<std::string, test_function> test_pair;
 
-void set_multithreaded(bool is_threaded);
-void set_max_num_threads(long unsigned int max_num_threads);
-void set_verbose(bool verbose);
-void set_header(bool header);
-void set_do_fuzzing(bool do_fuzzing);
-void set_test_one(const std::string &test_one);
-void set_fuzz_one(const std::string &fuzz_one);
-
-void parse_args(int argc, char *argv[]);
-void print_header();
+std::mutex &get_stream_mutex();
+std::atomic<bool> &get_verbose();
+std::atomic<long unsigned int> &get_max_num_threads();
+std::mutex &get_tests_mutex();
+std::atomic<bool> &get_is_threaded();
+std::vector<std::thread> &get_thread_pool();
 
 } // namespace valfuzz

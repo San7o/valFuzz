@@ -24,40 +24,68 @@
  *
  */
 
-#pragma once
-
-#include <atomic>
-#include <fstream>
-#include <functional>
-#include <iostream>
-#include <mutex>
-#include <string>
-#include <thread>
-#include <tuple>
-#include <deque>
-
-#include "valfuzz/benchmark.hpp"
-#include "valfuzz/fuzz.hpp"
-#include "valfuzz/test.hpp"
 #include "valfuzz/common.hpp"
 
 namespace valfuzz
 {
 
-std::atomic<bool> &get_header();
-std::atomic<bool> &get_do_fuzzing();
-std::optional<std::string> &get_test_one();
-std::optional<std::string> &get_fuzz_one();
+std::mutex &get_stream_mutex()
+{
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+        static std::mutex stream_mutex;
+    return stream_mutex;
+}
 
-void set_multithreaded(bool is_threaded);
-void set_max_num_threads(long unsigned int max_num_threads);
-void set_verbose(bool verbose);
-void set_header(bool header);
-void set_do_fuzzing(bool do_fuzzing);
-void set_test_one(const std::string &test_one);
-void set_fuzz_one(const std::string &fuzz_one);
+std::atomic<bool> &get_verbose()
+{
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+        static std::atomic<bool>
+            verbose = false;
+    return verbose;
+}
 
-void parse_args(int argc, char *argv[]);
-void print_header();
+std::atomic<long unsigned int> &get_max_num_threads()
+{
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+        static std::atomic<long unsigned int>
+            max_num_threads = 4;
+    return max_num_threads;
+}
+
+std::mutex &get_tests_mutex()
+{
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+        static std::mutex tests_mutex;
+    return tests_mutex;
+}
+
+std::atomic<bool> &get_is_threaded()
+{
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+        static std::atomic<bool>
+            is_threaded = true;
+    return is_threaded;
+}
+
+std::vector<std::thread> &get_thread_pool()
+{
+#if __cplusplus >= 202002L // C++20
+    constinit
+#endif
+        static std::vector<std::thread>
+            thread_pool;
+    return thread_pool;
+}
+
 
 } // namespace valfuzz

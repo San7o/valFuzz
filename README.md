@@ -68,12 +68,13 @@ Options:
 ### cmake
 
 ```bash
-cmake -Bbuild -DVALFUZZ_BUILD_SHARED=ON -DVALFUZZ_BUILD_STATIC=ON
+cmake -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j 4
 ```
 
-### bazel (experimental)
+### bazel
 ```
-bazel build //src:libvalfuzz --sandbox_debug --verbose_failures
+bazel build //:libvalfuzz
 ```
 
 ### cpm
@@ -83,7 +84,7 @@ the library in your project.
 CPMAddPackage(
     NAME valfuzz
     GITHUB_REPOSITORY San7o/valFuzz
-    GIT_TAG v1.0.4
+    GIT_TAG v1.1.0
     DOWNLOAD_ONLY True
 )
 if (valfuzz_ADDED AND BRENTA_BUILD_TESTS)
@@ -96,7 +97,7 @@ endif()
 ```
 [wrap-git]
 url = https://github.com/San7o/valFuzz
-revision = v1.0.4
+revision = v1.1.0
 depth = 1
 ```
 
