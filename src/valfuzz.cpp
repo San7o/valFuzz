@@ -281,6 +281,10 @@ int main(int argc, char **argv)
     unsigned int seed = (unsigned int) std::time(nullptr);
     std::srand(seed);
 
+    std::random_device rd;
+    std::mt19937 gen = valfuzz::get_random_engine();
+    gen.seed(rd());
+
     valfuzz::get_function_execute_before()();
 
     if (valfuzz::get_do_benchmarks())
