@@ -64,12 +64,13 @@ namespace valfuzz
         std::cout << std::flush;                                               \
         std::chrono::duration<double> total =                                  \
             std::chrono::duration<double>::zero();                             \
-        double min = std::numeric_limits<double>::max();                       \
-        double max = -1.0;                                                     \
         double mean = 0.0;                                                     \
         double M2 = 0.0;                                                       \
         const int N_ITER = valfuzz::get_num_iterations_benchmark();            \
         double *times = new double[N_ITER];                                    \
+        /* run twice to warm up the cache */                                   \
+        __VA_ARGS__;                                                           \
+        __VA_ARGS__;                                                           \
         for (int i = 0; i < N_ITER; i++)                                       \
         {                                                                      \
             auto start = std::chrono::high_resolution_clock::now();            \
@@ -79,8 +80,6 @@ namespace valfuzz
             total += elapsed;                                                  \
             double e = elapsed.count();                                        \
             times[i] = e;                                                      \
-            min = e < min ? e : min;                                           \
-            max = e > max ? e : max;                                           \
             /* Welford's algorithm  */                                         \
             double delta = e - mean;                                           \
             mean += delta / (i + 1);                                           \
@@ -90,20 +89,27 @@ namespace valfuzz
         std::sort(times, times + N_ITER);                                      \
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
         std::cout << "benchmark: \"" << benchmark_name                         \
-                  << "\"\n - space: " << input_size << "\n - min: " << min     \
-                  << "s\n - max: " << max                                      \
+                  << "\"\n - space: " << input_size                            \
+                  << "\n - min: " << times[N_ITER > 1 ? 1 : 0]                 \
+                  << "s\n - max: " << times[N_ITER > 1 ? N_ITER - 2 : N_ITER]  \
+                  << "s\n - median: " << times[N_ITER / 2]                     \
                   << "s\n - mean: " << total.count() / N_ITER                  \
                   << "s\n - standard deviation: " << std::sqrt(variance)       \
-                  << "\n - Q1: " << times[(N_ITER + 1) / 4]                    \
-                  << "s\n - Q3: " << times[3 * (N_ITER + 1) / 4] << "s\n";     \
+                  << "\n - Q1: " << times[N_ITER / 4]                          \
+                  << "s\n - Q3: " << times[3 * N_ITER / 4] << "s\n";           \
         std::cout << std::flush;                                               \
         if (valfuzz::get_save_to_file())                                       \
         {                                                                      \
             valfuzz::get_save_file()                                           \
-                << "\"" << benchmark_name << "\"," << input_size << "," << min \
-                << "," << max << "," << total.count() / N_ITER << ","          \
-                << std::sqrt(variance) << "," << times[(N_ITER + 1) / 4]       \
-                << "," << times[3 * (N_ITER + 1) / 4] << "\n";                 \
+                << "\"" << benchmark_name << "\"," \
+                << input_size << "," \
+                << times[N_ITER > 1 ? 1 : 0] << "," \
+                << times[N_ITER > 1 ? N_ITER-2 : N_ITER-1] << "," \
+                << times[N_ITER / 2] << ","               \
+                << total.count() / N_ITER << "," \
+                << std::sqrt(variance) << "," \
+                << times[N_ITER / 4] << "," \
+                << times[3 * N_ITER / 4] << "\n";  \
         }                                                                      \
     }
 

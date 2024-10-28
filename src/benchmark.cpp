@@ -145,7 +145,7 @@ void set_save_file(const std::filesystem::path &output_dir)
         std::cout << "Could not open file " << output_dir << "\n";
         std::exit(1);
     }
-    output_dir_ref << "name,space,min,max,mean,sd,q1,q3\n";
+    output_dir_ref << "name,space,min,max,median,mean,sd,q1,q3\n";
 }
 
 void add_benchmark(const std::string &name, benchmark_function benchmark)
