@@ -49,14 +49,16 @@ template <> __attribute__((noinline)) int get_random<int>()
 template <> float get_random<float>()
 {
     std::mt19937 &random_engine = valfuzz::get_random_engine();
-    std::uniform_real_distribution<> &uniform_distribution = valfuzz::get_uniform_distribution();
+    std::uniform_real_distribution<> &uniform_distribution =
+        valfuzz::get_uniform_distribution();
     return static_cast<float>(uniform_distribution(random_engine));
 }
 
 template <> double get_random<double>()
 {
     std::mt19937 &random_engine = valfuzz::get_random_engine();
-    std::uniform_real_distribution<> &uniform_distribution = valfuzz::get_uniform_distribution();
+    std::uniform_real_distribution<> &uniform_distribution =
+        valfuzz::get_uniform_distribution();
     return static_cast<double>(uniform_distribution(random_engine));
 }
 

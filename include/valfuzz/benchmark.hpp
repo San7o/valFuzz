@@ -68,7 +68,9 @@ namespace valfuzz
         double max = -1.0;                                                     \
         double mean = 0.0;                                                     \
         double M2 = 0.0;                                                       \
-        for (int i = 0; i < valfuzz::get_num_iterations_benchmark(); i++)      \
+        const int N_ITER = valfuzz::get_num_iterations_benchmark();            \
+        double *times = new double[N_ITER];                                    \
+        for (int i = 0; i < N_ITER; i++)                                       \
         {                                                                      \
             auto start = std::chrono::high_resolution_clock::now();            \
             __VA_ARGS__;                                                       \
@@ -76,6 +78,7 @@ namespace valfuzz
             std::chrono::duration<double> elapsed = end - start;               \
             total += elapsed;                                                  \
             double e = elapsed.count();                                        \
+            times[i] = e;                                                      \
             min = e < min ? e : min;                                           \
             max = e > max ? e : max;                                           \
             /* Welford's algorithm  */                                         \
@@ -83,22 +86,24 @@ namespace valfuzz
             mean += delta / (i + 1);                                           \
             M2 += (e - mean) * delta;                                          \
         }                                                                      \
-        double variance = M2 / valfuzz::get_num_iterations_benchmark();        \
+        double variance = M2 / N_ITER;                                         \
+        std::sort(times, times + N_ITER);                                      \
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
         std::cout << "benchmark: \"" << benchmark_name                         \
                   << "\"\n - space: " << input_size << "\n - min: " << min     \
-                  << "s\n - max: " << max << "s\n - mean: "                    \
-                  << total.count() / valfuzz::get_num_iterations_benchmark()   \
+                  << "s\n - max: " << max                                      \
+                  << "s\n - mean: " << total.count() / N_ITER                  \
                   << "s\n - standard deviation: " << std::sqrt(variance)       \
-                  << "s \n";                                                   \
+                  << "\n - Q1: " << times[(N_ITER + 1) / 4]                    \
+                  << "s\n - Q3: " << times[3 * (N_ITER + 1) / 4] << "s\n";     \
         std::cout << std::flush;                                               \
         if (valfuzz::get_save_to_file())                                       \
         {                                                                      \
             valfuzz::get_save_file()                                           \
                 << "\"" << benchmark_name << "\"," << input_size << "," << min \
-                << "," << max << ","                                           \
-                << total.count() / valfuzz::get_num_iterations_benchmark()     \
-                << "," << std::sqrt(variance) << "\n";                         \
+                << "," << max << "," << total.count() / N_ITER << ","          \
+                << std::sqrt(variance) << "," << times[(N_ITER + 1) / 4]       \
+                << "," << times[3 * (N_ITER + 1) / 4] << "\n";                 \
         }                                                                      \
     }
 

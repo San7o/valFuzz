@@ -19,24 +19,6 @@ valFuzz (or val-di-Fuzz) is a modern cross-platform testing, fuzzing and benchma
 
 > valFuzz is the official testing library for [Brenta Engine](https://github.com/San7o/Brenta-Engine).
 
-## Features
-
-- [x] assert macros
-
-- [x] automatic test registration
-
-- [x] parallel execution
-
-- [x] arguments options
-
-- [x] execute before / after all
-
-- [x] fuzzing
-
-- [x] benchmarking
-
-- [x] produce benchmark report
-
 # Usage
 ```
 Usage: valfuzz [options]
@@ -60,6 +42,7 @@ Options:
  GENERAL
   --verbose: print test names
   --no-header: do not print the header at the start
+  --seed <seed>: set the seed for PRNG
   --help: print this help message
 ```
 
@@ -87,10 +70,6 @@ CPMAddPackage(
     GIT_TAG v1.1.0
     DOWNLOAD_ONLY True
 )
-if (valfuzz_ADDED AND BRENTA_BUILD_TESTS)
-    list(APPEND MY_INCLUDES ${valfuzz_SOURCE_DIR}/include)
-    list(APPEND MY_SOURCES ${valfuzz_SOURCE_DIR}/src/valfuzz.cpp)
-endif()
 ```
 
 ### meson
@@ -200,10 +179,10 @@ int sum_slow(int a, int b)
     return sum;
 }
 
-BENCHMARK(bench_sum_slow, "Sum slow benchmark")
+BENCHMARK(bench_sum_slow, "Sum slow")
 {
-    int a = 1;
-    int b = 2;
+    int a = 1000;
+    int b = 2000;
     RUN_BENCHMARK(1, sum_slow(a, b));
 }
 ```
@@ -213,13 +192,15 @@ Compile and run with `--benchmark` flag:
 ./build/valfuzz --benchmark --verbose
 ```
 ```
-Running benchmark: Sum arrays benchmark
-benchmark: "Sum arrays benchmark"
- - space: 40000
- - min: 1.8971e-05s
- - max: 4.9554e-05s
- - mean: 1.99462e-05s
- - standard deviation: 8.35139e-07s
+Running benchmark: Sum slow
+benchmark: "Sum slow"
+ - space: 10000
+ - min: 1.7114e-05s
+ - max: 2.9317e-05s
+ - mean: 1.94025e-05s
+ - standard deviation: 1.63826e-06
+ - Q1: 1.8365e-05s
+ - Q3: 2.0794e-05s
 ```
 
 The benchmark will be run 100000 times to get the average time. You
@@ -227,7 +208,7 @@ can set the number of iterations using the `--num-iterations` flag.
 If you specified `--report <file>`, a csv file will be generated
 with the following structure:
 ```
-benchmark_name,space_complexity,min_time,max_time,mean,standard_deviation
+benchmark_name,space_complexity,min_time,max_time,mean,standard_deviation,quantile1,quantile3
 ```
 You can quickly generate a graph with python by following the instructions
 in [plotting/README.md](plotting/README.md).

@@ -71,6 +71,13 @@ std::optional<std::string> &get_fuzz_one()
     return fuzz_one;
 }
 
+std::atomic<long unsigned int> &get_seed()
+{
+    static std::atomic<long unsigned int> seed =
+        (long unsigned int) std::time(nullptr);
+    return seed;
+}
+
 void set_multithreaded(bool is_threaded)
 {
     auto &is_threaded_ref = get_is_threaded();
@@ -113,6 +120,12 @@ void set_fuzz_one(const std::string &fuzz_one)
     fuzz_one_ref = fuzz_one;
 }
 
+void set_seed(long unsigned int new_seed)
+{
+    auto &seed = get_seed();
+    seed = new_seed;
+}
+
 char valfuzz_banner[] = "             _ _____              \n"
                         " __   ____ _| |  ___|   _ ________\n"
                         " \\ \\ / / _` | | |_ | | | |_  /_  /\n"
@@ -150,6 +163,11 @@ void parse_args(int argc, char *argv[])
                 set_test_one(argv[i + 1]);
                 i++;
             }
+            else
+            {
+                std::cerr << "Test name not provided\n";
+                std::exit(1);
+            }
         }
         else if (std::string(argv[i]) == "--fuzz")
         {
@@ -163,6 +181,11 @@ void parse_args(int argc, char *argv[])
                 set_fuzz_one(argv[i + 1]);
                 i++;
             }
+            else
+            {
+                std::cerr << "Fuzz test name not provided\n";
+                std::exit(1);
+            }
         }
         else if (std::string(argv[i]) == "--benchmark")
         {
@@ -174,6 +197,11 @@ void parse_args(int argc, char *argv[])
             {
                 set_num_iterations_benchmark(std::stoi(argv[i + 1]));
                 i++;
+            }
+            else
+            {
+                std::cerr << "Number of iterations not provided\n";
+                std::exit(1);
             }
         }
         else if (std::string(argv[i]) == "--run-one-benchmark")
@@ -191,7 +219,7 @@ void parse_args(int argc, char *argv[])
                 }
                 if (!found)
                 {
-                    std::cout << "Benchmark \"" << argv[i + 1]
+                    std::cerr << "Benchmark \"" << argv[i + 1]
                               << "\" not found\n";
                     std::exit(1);
                 }
@@ -209,6 +237,11 @@ void parse_args(int argc, char *argv[])
                 set_save_file(argv[i + 1]);
                 i++;
             }
+            else
+            {
+                std::cerr << "Report file not provided\n";
+                std::exit(1);
+            }
         }
         else if (std::string(argv[i]) == "--no-multithread")
         {
@@ -225,10 +258,28 @@ void parse_args(int argc, char *argv[])
                 set_max_num_threads(std::stoul(argv[i + 1]));
                 i++;
             }
+            else
+            {
+                std::cerr << "Number of threads not provided\n";
+                std::exit(1);
+            }
         }
         else if (std::string(argv[i]) == "--no-header")
         {
             set_header(false);
+        }
+        else if (std::string(argv[i]) == "--seed")
+        {
+            if (i + 1 < argc)
+            {
+                set_seed(std::stoul(argv[i + 1]));
+                i++;
+            }
+            else
+            {
+                std::cerr << "Seed not provided\n";
+                std::exit(1);
+            }
         }
         else if (std::string(argv[i]) == "--help")
         {
@@ -259,12 +310,13 @@ void parse_args(int argc, char *argv[])
             std::cout << "  --verbose: print test names\n";
             std::cout
                 << "  --no-header: do not print the header at the start\n";
+            std::cout << "  --seed <seed>: set the seed for PRNG\n";
             std::cout << "  --help: print this help message\n";
             std::exit(0);
         }
         else
         {
-            std::cout << "Unknown option: " << argv[i] << "\n";
+            std::cerr << "Unknown option: " << argv[i] << "\n";
             std::exit(1);
         }
     }
@@ -278,12 +330,11 @@ int main(int argc, char **argv)
     if (valfuzz::get_header())
         valfuzz::print_header();
 
-    unsigned int seed = (unsigned int) std::time(nullptr);
-    std::srand(seed);
+    auto &seed = valfuzz::get_seed();
+    std::srand((unsigned int) seed);
 
-    std::random_device rd;
     std::mt19937 gen = valfuzz::get_random_engine();
-    gen.seed(rd());
+    gen.seed(seed);
 
     valfuzz::get_function_execute_before()();
 
@@ -291,6 +342,7 @@ int main(int argc, char **argv)
     {
         {
             std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());
+            std::cout << "Seed: " << seed << "\n";
             std::cout << "Running " << valfuzz::get_num_benchmarks()
                       << " benchmarks...\n";
         }
@@ -339,7 +391,7 @@ int main(int argc, char **argv)
 
     if (valfuzz::get_has_failed_once())
     {
-        std::cout << "Failed\n";
+        std::cerr << "Failed\n";
         return 1;
     }
     else

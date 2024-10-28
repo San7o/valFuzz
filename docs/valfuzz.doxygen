@@ -2,39 +2,46 @@
 /// 
 /// \mainpage valFuzz Documentation
 /// ```
-///              _ _____
-///  __   ____ _| |  ___|   _ ________
-///  \ \ / / _` | | |_ | | | |_  /_  /
-///   \ V / (_| | |  _|| |_| |/ / / /
-///    \_/ \__,_|_|_|   \__,_/___/___|
-/// 
+///             _ _____
+/// __   ____ _| |  ___|   _ ________
+/// \ \ / / _` | | |_ | | | |_  /_  /
+///  \ V / (_| | |  _|| |_| |/ / / /
+///   \_/ \__,_|_|_|   \__,_/___/___|
+///
 /// A modern testing & fuzzing library for C++
 /// Settings:
-///  - Multithreaded: true
+///  - Multithreaded: 1
 ///  - Max threads: 4
-///  - Verbose: false
-/// 
-/// Seed: 1726579491
-/// Running 18 tests...
+///  - Run Fuzzs: 0
+///  - Run Benchmarks: 0
+///  - Verbose: 0
+///
+/// Before test
+/// Seed: 1730108360
+/// Running 1337 tests...
 /// ```
 /// Welcome to the official valFuzz documentation. This guide provides comprehensive
-/// information and practical examples to help you use valFuzz for your testing and
-/// fuzzing needs.
+/// information and practical examples to help you use valFuzz for your testing needs.
 /// 
 /// \section overview Overview
 ///
-/// valFuzz is a minimal and lightweight fuzzing framework for C++23. It uses modern
+/// valFuzz is a lightweight testing, fuzzing and benchmarking framework for C++17 onwards. It uses modern
 /// standards and techniques to provide a robust and efficient framework for testing
-/// and fuzzing for small-medium size projects without particular
-/// testing requirements. Despite this, the simpliciry of the library allows for easy extension and
-/// customization for your own need.
+/// and fuzzing for small-medium size projects. The simpliciry of the library allows
+/// for easy extension and customization for your own need.
 ///
 /// \section installation Installation
-/// The library is composed of a header and a source file: `include/valfuzz/valfuzz.hpp` and `src/valfuzz.cpp`
-/// respectively. To use the library, you can simply include the header file in your project and add the
-/// source file to your build sources.
+/// You can compile the library as a shared library or a static library using either cmake or bazel. valfuzz has no dependencies other than the standard library.
+///
+/// \subsection cmake CMake
 /// \code
-/// #include "valfuzz/valfuzz.hpp"
+/// cmake -Bbuild -DCMAKE_BUILD_TYPE=Release
+/// cmake --build build -j4
+/// \endcode
+///
+/// \subsection bazel Bazel
+/// \code
+/// bazel build //:libvalfuzz
 /// \endcode
 ///
 /// \section usage Usage
@@ -147,6 +154,11 @@
 ///
 /// You can define a benchmark function with the macro `BENCHMARK`. Inside the benchmark, you can
 /// do any setup / cleanup and run an expression to be benchmarked with `BENCHMARK_RUN`.
+///
+/// The first argument to `BENCHMARK_RUN` is the input size, and the second argument
+/// is the expression to be benchmarked. The input size is specified for
+/// logging purposes only and can be set to any value that can be printed with `std::cout`.
+/// 
 /// 
 /// > currently, the cache will be reset between benchmarks only on linux
 /// 
@@ -162,11 +174,11 @@
 ///     return sum;
 /// }
 /// 
-/// BENCHMARK(bench_sum_slow, "Sum slow benchmark")
+/// BENCHMARK(bench_sum_slow, "Sum slow")
 /// {
-///     int a = 1;
-///     int b = 2;
-///     RUN_BENCHMARK(sum_slow(a, b));
+///     int a = 1000;
+///     int b = 2000;
+///     RUN_BENCHMARK(a, sum_slow(a, b));
 /// }
 /// ```
 /// 
@@ -175,17 +187,38 @@
 /// ./build/valfuzz --benchmark --verbose
 /// ```
 /// ```
-/// Running benchmark: Sum slow benchmark
-/// benchmark: "Sum slow benchmark", time: 1.6342204000065603e-08s
+/// Running benchmark: Sum slow
+/// benchmark: "Sum slow"
+///  - space: 10000
+///  - min: 1.7115e-05s
+///  - max: 9.2012e-05s
+///  - mean: 1.93739e-05s
+///  - standard deviation: 3.02685e-06
+///  - Q1: 1.8363e-05s
+///  - Q3: 2.0115e-05s
 /// ```
 /// 
 /// The benchmark will be run 100000 times to get the average time. You
 /// can set the number of iterations using the `--num-iterations` flag.
 ///
+/// \subsection report Save a Benchmark Report
+/// You can save the results of your benchmark in a CSV file by passing `--report <file>`
+/// as a command line argument. The output will be saved using the following format:
+/// ```
+/// name,space,min,max,mean,sd,q1,q3
+/// ```
+///
+/// \subsection plotting Plotting
+///
+/// After you have collected the benchmark data, you can generate plots and graphs using
+/// python templates and examples provided in the `plotting` directory. The templates use
+/// `seaborn` and `matplotlib` libraries to generate the graphs.
+///
 /// \subsection multithreading Multithreading
 ///
 /// All tests and fuzz functions are run on multiple threads by default. You can disable multithreading
 /// by passing `--no-multithread` as a command line argument.
+///
 ///
 /// \subsection command_line Command Line Arguments
 /// You can pass the following command line arguments to the program:
@@ -194,8 +227,11 @@
 /// - `--fuzz <fuzz_name>` - Run a specific fuzz function by name.
 /// - `--benchmark` - Run benchmarks.
 /// - `--num-iterations <num>` - Set the number of iterations for benchmarks.
+/// - `--run-one-benchmark <name>` - run a specific benchmark
 /// - `--no-multithread` - Disable multithreading.
 /// - `--verbose` - Enable verbose output.
 /// - `--max-threads <n>` - Set the maximum number of threads to use.
 /// - `--no-header` - Disable the header print at the start.
+/// - `--seed <seed>` - Set the seed for the random number generator.
+/// - `--report <file>` - Save benchmark report to a file.
 /// - `--help` - Display help information.

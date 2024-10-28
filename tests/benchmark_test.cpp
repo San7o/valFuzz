@@ -10,7 +10,7 @@ int sum_slow(int a, int b)
     return sum;
 }
 
-BENCHMARK(bench_sum_slow, "Sum slow benchmark")
+BENCHMARK(bench_sum_slow, "Sum slow")
 {
     int a = 10000;
     int b = 20000;
@@ -26,7 +26,7 @@ void sum_arr(int a[], int b[], int n, int *sum)
     }
 }
 
-BENCHMARK(bench_sum_arrays, "Sum arrays benchmark")
+BENCHMARK(bench_sum_arrays, "Sum arrays")
 {
     int a[10000];
     int b[10000];
@@ -56,7 +56,7 @@ void matrix_multiply(float **M, float **N, float **P, int m, int n, int p)
     }
 }
 
-BENCHMARK(bench_matrix_multiply, "Matrix multiply benchmark")
+BENCHMARK(bench_matrix_multiply, "Matrix multiply")
 {
     float **M = new float *[100];
     float **N = new float *[100];
@@ -68,12 +68,13 @@ BENCHMARK(bench_matrix_multiply, "Matrix multiply benchmark")
         P[i] = new float[100];
         for (int j = 0; j < 100; j++)
         {
-            M[i][j] = static_cast<float>(i + j); 
+            M[i][j] = static_cast<float>(i + j);
             N[i][j] = static_cast<float>(i - j);
         }
     }
 
-    RUN_BENCHMARK(100 * 100 * 100 * sizeof(float), matrix_multiply(M, N, P, 100, 100, 100));
+    RUN_BENCHMARK(100 * 100 * 100 * sizeof(float),
+                  matrix_multiply(M, N, P, 100, 100, 100));
 }
 
 void insertion_sort(int in[], int out[], int n)
@@ -90,7 +91,7 @@ void insertion_sort(int in[], int out[], int n)
     }
 }
 
-BENCHMARK(bench_insertion_sort, "Insertion sort benchmark")
+BENCHMARK(bench_insertion_sort, "Insertion sort")
 {
     int arr[10000];
     int out[10000];

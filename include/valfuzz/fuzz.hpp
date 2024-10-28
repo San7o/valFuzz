@@ -34,10 +34,10 @@
 #include <functional>
 #include <iostream>
 #include <mutex>
+#include <random>
 #include <string>
 #include <thread>
 #include <tuple>
-#include <random>
 
 namespace valfuzz
 {
