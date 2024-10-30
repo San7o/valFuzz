@@ -39,12 +39,7 @@ std::atomic<bool> &get_save_to_file()
     return save_to_file;
 }
 
-#if defined(_WIN32) || defined(_WIN64)
-unsigned long get_cache_l3_size()
-{
-    return 0;
-}
-#else
+#if defined(__linux__)
 unsigned long get_cache_l3_size()
 {
     std::ifstream file("/sys/devices/system/cpu/cpu0/cache/index2/size");
@@ -72,6 +67,16 @@ unsigned long get_cache_l3_size()
     }
 
     return cache_size;
+}
+#elif defined(_WIN32) || defined(_WIN64)
+unsigned long get_cache_l3_size()
+{
+    return 0;
+}
+#else
+unsigned long get_cache_l3_size()
+{
+    return 0;
 }
 #endif
 
