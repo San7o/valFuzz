@@ -41,6 +41,10 @@
 #include <string>
 #include <tuple>
 
+#ifdef openMP
+#include <omp.h>
+#endif
+
 namespace valfuzz
 {
 
@@ -96,7 +100,7 @@ namespace valfuzz
                   << "s\n - mean: " << total.count() / N_ITER                  \
                   << "s\n - standard deviation: " << std::sqrt(variance)       \
                   << "\n - Q1: " << times[N_ITER / 4]                          \
-                  << "s\n - Q3: " << times[3 * N_ITER / 4] << "s\n";           \
+                  << "s\n - Q3: " << times[3 * N_ITER / 4] << "\n";	       \
         std::cout << std::flush;                                               \
         if (valfuzz::get_save_to_file())                                       \
         {                                                                      \

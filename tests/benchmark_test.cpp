@@ -104,3 +104,65 @@ BENCHMARK(bench_insertion_sort, "Insertion sort")
     RUN_BENCHMARK(100 * sizeof(int), insertion_sort(arr, out, 100));
     RUN_BENCHMARK(1000 * sizeof(int), insertion_sort(arr, out, 1000));
 }
+
+#ifdef openMP
+
+void omp_array_sum(int* arr1, int* arr2, int* out, size_t N)
+{
+  #pragma omp parallel for
+  for (size_t i = 0; i < N; ++i)
+    {
+      out[i] = arr1[i] + arr2[i];
+    }
+}
+
+BENCHMARK(bench_omp_array_sum, "Omp array sum")
+{
+#define OMP_ARRAY_SUM_SIZE 10000
+    int arr1[OMP_ARRAY_SUM_SIZE];
+    int arr2[OMP_ARRAY_SUM_SIZE];
+    int out[OMP_ARRAY_SUM_SIZE];
+    for (int i = 0; i < OMP_ARRAY_SUM_SIZE; i++)
+    {
+      arr1[i] = i;
+      arr2[i] = 10000 - i;
+      out[i] = 0;
+    }
+
+    omp_set_num_threads(1);
+    RUN_BENCHMARK(10000 * sizeof(int), omp_array_sum(arr1, arr2, out, 10000));
+    for (int i = 0; i < 10000; ++i)
+      {
+      if (out[i] != 10000)
+	{
+	  std::cerr << "Benchmark: omp array sum: incorrect output\n";
+	  exit(1);
+	}
+      out[i] = 0;
+      }
+
+    omp_set_num_threads(4);
+    RUN_BENCHMARK(10000 * sizeof(int), omp_array_sum(arr1, arr2, out, 10000));
+    for (int i = 0; i < 10000; ++i)
+      {
+      if (out[i] != 10000)
+	{
+	  std::cerr << "Benchmark: omp array sum: incorrect output\n";
+	  exit(1);
+	}
+      out[i] = 0;
+      }
+
+    omp_set_num_threads(8);
+    RUN_BENCHMARK(10000 * sizeof(int), omp_array_sum(arr1, arr2, out, 10000));
+    for (int i = 0; i < 10000; ++i)
+      {
+      if (out[i] != 10000)
+	{
+	  std::cerr << "Benchmark: omp array sum: incorrect output\n";
+	  exit(1);
+	}
+      out[i] = 0;
+      }
+}
+#endif
