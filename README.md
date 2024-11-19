@@ -10,12 +10,17 @@ Settings:
  - Multithreaded: true
  - Max threads: 4
  - Verbose: true
+ - Reporter: default
 
 Seed: 1726579491
 Running 1337 tests...
 ```
 
-valFuzz (or val-di-Fuzz) is a modern cross-platform testing, fuzzing and benchmarking library for C++17/20/23. Check out [tests](./tests) for some examples on how to use this library, or read the online documentation [here](https://san7o.github.io/brenta-engine-documentation/valfuzz/v1.0/).
+valFuzz (or val-di-Fuzz) is a modern cross-platform testing,
+fuzzing and benchmarking library for C++17/20/23.
+Check out [tests](./tests) for some examples on how to use
+this library, or read the online documentation
+[here](https://san7o.github.io/brenta-engine-documentation/valfuzz/v1.0/).
 
 > valFuzz is the official testing library for [Brenta Engine](https://github.com/San7o/Brenta-Engine).
 
@@ -38,6 +43,8 @@ Options:
   --num-iterations <num>: set the number of iterations for benchmarks
   --run-one-benchmark <name>: run a specific benchmark
   --report <file>: save benchmark results to a file
+  --reporter <name>: use a custom reporter, currently supported
+                     are default, csv, none
 
  GENERAL
   --verbose: print test names
@@ -81,7 +88,9 @@ depth = 1
 ```
 
 # Documentation
-You can read a comprehensive documentation [here](https://san7o.github.io/brenta-engine-documentation/valfuzz/v1.0/). Here is presented a quick guide to showcase the library's api.
+You can read a comprehensive documentation
+[here](https://san7o.github.io/brenta-engine-documentation/valfuzz/v1.0/).
+Here is presented a quick guide to showcase the library's api.
 
 ## Run tests
 You can run a test by defining it with the `TEST` macro:
@@ -96,20 +105,23 @@ TEST(simple, "Simple Assertion") {
 test: Simple Assertion, line: 3, Assertion failed: 1 != 2
 ```
 
-The library already contains a main so you just need to define the tests with `TEST`, the first
-argument is the test name, the second one is the name that will be displayed in the output
-when an assertion on the test fails.
+The library already contains a main so you just need to
+define the tests with `TEST`, the first argument is the
+test name, the second one is the name that will be
+displayed in the output when an assertion on the test
+fails.
 
 ## Run a single test
 
-If you want, you can run a specific test by passing Its name to `--test` argument:
+If you want, you can run a specific test by passing
+Its name to `--test` argument:
 ```bash
 ./build/asserts_test --test "Simple Assertion"
 ```
 
 ## Execute before and after all
-You can set a function to be executed either before or after all the tests with
-the macro `BEFORE()` and `AFTER()`:
+You can set a function to be executed either before or after
+all the tests with the macro `BEFORE()` and `AFTER()`:
 ```c++
 BEFORE() {
     std::cout << "Before test" << std::endl;
@@ -125,8 +137,8 @@ TEST(a_test, "Another simple test") {
 ```
 
 ## Fuzzing
-You can set up a fuzz test using the `FUZZME` macro, specifying an unique
-fuzz name and a string name:
+You can set up a fuzz test using the `FUZZME` macro, specifying
+an unique fuzz name and a string name:
 ```c++
 FUZZME(simple_fuzzing, "Simple fuzzing")
 {
@@ -136,9 +148,10 @@ FUZZME(simple_fuzzing, "Simple fuzzing")
     ASSERT_EQ(ret, a + b);
 }
 ```
-and use the `get_random<T>()` function to get a random value of `T` type. Fuzz
-tests are executed continuously in a multithreaded environment (unless you
-specify `--no-multithread`) until you stop the program.
+and use the `get_random<T>()` function to get a random
+value of `T` type. Fuzz tests are executed continuously
+in a multithreaded environment (unless you specify 
+`--no-multithread`) until you stop the program.
 
 You can run with fuzzing by specifying `--fuzz`:
 ```bash
@@ -159,10 +172,14 @@ Iterations: 3000000
 
 ## Benchmarks
 
-You can define a benchmark function with the macro `BENCHMARK`. Inside the benchmark, you can
-do any setup / cleanup and run an expression to be benchmarked with `BENCHMARK_RUN(space, expr)`. The first argument is gonna be the space complecity, this will be used to 
-produce a report if you specified `--report <file>`; the second argument is
-the expression that will be evaluated. If you didn't specify a report file, you
+You can define a benchmark function with the macro `BENCHMARK`.
+Inside the benchmark, you can do any setup / cleanup and run
+an expression to be benchmarked with `BENCHMARK_RUN(space, expr)`.
+The first argument is gonna be the space complecity, this will be used to 
+produce a report, the second argument is the expression that will
+be evaluated. You can specify a reporter or provide one your
+own since It very easy. Yon can save the reports in a file via
+`--report <file>`. If you didn't specify a report file, you
 can set any value in the first argument.
 
 > currently, the cache will be reset between benchmarks only on linux
@@ -203,9 +220,9 @@ benchmark: "Sum slow"
  - Q3: 2.0794e-05s
 ```
 
-The benchmark will be run 100000 times to get the average time. You
+The benchmark will be run 10000 times by default. You
 can set the number of iterations using the `--num-iterations` flag.
-If you specified `--report <file>`, a csv file will be generated
+If you specified `--reporter csv`, a csv output will be generated
 with the following structure:
 ```
 benchmark_name,space_complexity,min_time,max_time,mean,standard_deviation,quantile1,quantile3

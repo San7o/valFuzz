@@ -29,6 +29,7 @@ list(APPEND VALFUZZ_SOURCES
     src/fuzz.cpp
     src/benchmark.cpp
     src/common.cpp
+    src/reporter.cpp
 )
 list(APPEND VALFUZZ_COMPILE_OPTIONS -Wall -Wextra -Werror -Wpedantic -Wconversion)
 list(APPEND VALFUZZ_TEST_SOURCES

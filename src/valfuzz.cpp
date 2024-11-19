@@ -141,6 +141,7 @@ void print_header()
     bool do_fuzzing = get_do_fuzzing();
     bool do_benchmarks = get_do_benchmarks();
     long unsigned int max_num_threads = get_max_num_threads();
+    std::string reporter_id = get_reporter();
     std::lock_guard<std::mutex> lock(get_stream_mutex());
     std::cout << valfuzz_banner;
     std::cout << "Settings:\n";
@@ -149,6 +150,7 @@ void print_header()
     std::cout << " - Run Fuzzs: " << do_fuzzing << "\n";
     std::cout << " - Run Benchmarks: " << do_benchmarks << "\n";
     std::cout << " - Verbose: " << verbose << "\n";
+    std::cout << " - Reporter: " << reporter_id << "\n";
     std::cout << "\n";
 }
 
@@ -243,6 +245,19 @@ void parse_args(int argc, char *argv[])
                 std::exit(1);
             }
         }
+        else if (std::string(argv[i]) == "--reporter")
+        {
+	  if (i + 1 < argc && reporter_eg.has(argv[i+1]))
+            {
+	      set_reporter(argv[i+1]);
+                i++;
+            }
+            else
+            {
+	      std::cerr << "Reporter "<< argv[i+1]<< " unrecognised\n";
+                std::exit(1);
+            }
+        }
         else if (std::string(argv[i]) == "--no-multithread")
         {
             set_multithreaded(false);
@@ -305,6 +320,10 @@ void parse_args(int argc, char *argv[])
                 << "  --run-one-benchmark <name>: run a specific benchmark\n";
             std::cout
                 << "  --report <file>: save benchmark results to a file\n";
+            std::cout
+                << "  --reporter <name>: use a custom reporter, currently supported\n";
+	    std::cout
+	        << "                     are default, csv, none\n"; 
             std::cout << "\n";
             std::cout << " GENERAL \n";
             std::cout << "  --verbose: print test names\n";

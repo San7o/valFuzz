@@ -27,6 +27,7 @@
 #pragma once
 
 #include "valfuzz/common.hpp"
+#include "valfuzz/reporter.hpp"
 
 #include <atomic>
 #include <cmath>
@@ -48,7 +49,7 @@
 namespace valfuzz
 {
 
-#define NUM_ITERATIONS_BENCHMARK 100000
+#define NUM_ITERATIONS_BENCHMARK 10000
 
 /* Benchmarks */
 
@@ -91,29 +92,25 @@ namespace valfuzz
         }                                                                      \
         double variance = M2 / N_ITER;                                         \
         std::sort(times, times + N_ITER);                                      \
+	struct valfuzz::report rep = {					\
+	  benchmark_name,						\
+	  (long unsigned int) input_size,				\
+          times[N_ITER > 1 ? 1 : 0],					\
+          times[N_ITER > 1 ? N_ITER-2 : N_ITER-1],			\
+          times[N_ITER / 2],						\
+          total.count() / N_ITER,					\
+          std::sqrt(variance),						\
+          times[N_ITER / 4],						\
+          times[3 * N_ITER / 4],					\
+	};								\
         std::lock_guard<std::mutex> lock(valfuzz::get_stream_mutex());         \
-        std::cout << "benchmark: \"" << benchmark_name                         \
-                  << "\"\n - space: " << input_size                            \
-                  << "\n - min: " << times[N_ITER > 1 ? 1 : 0]                 \
-                  << "s\n - max: " << times[N_ITER > 1 ? N_ITER - 2 : N_ITER]  \
-                  << "s\n - median: " << times[N_ITER / 2]                     \
-                  << "s\n - mean: " << total.count() / N_ITER                  \
-                  << "s\n - standard deviation: " << std::sqrt(variance)       \
-                  << "\n - Q1: " << times[N_ITER / 4]                          \
-                  << "s\n - Q3: " << times[3 * N_ITER / 4] << "\n";	       \
-        std::cout << std::flush;                                               \
+        std::cout << valfuzz::reporter_eg.report(&rep, valfuzz::get_reporter()).str() \
+                  << std::flush;					\
         if (valfuzz::get_save_to_file())                                       \
         {                                                                      \
-            valfuzz::get_save_file()                                           \
-                << "\"" << benchmark_name << "\"," \
-                << input_size << "," \
-                << times[N_ITER > 1 ? 1 : 0] << "," \
-                << times[N_ITER > 1 ? N_ITER-2 : N_ITER-1] << "," \
-                << times[N_ITER / 2] << ","               \
-                << total.count() / N_ITER << "," \
-                << std::sqrt(variance) << "," \
-                << times[N_ITER / 4] << "," \
-                << times[3 * N_ITER / 4] << "\n";  \
+	  valfuzz::get_save_file() \
+	    << valfuzz::reporter_eg.report(&rep, valfuzz::get_reporter()).str() \
+	      << std::flush; \
         }                                                                      \
     }
 

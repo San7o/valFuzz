@@ -30,6 +30,7 @@
 #include "valfuzz/common.hpp"
 #include "valfuzz/fuzz.hpp"
 #include "valfuzz/test.hpp"
+#include "valfuzz/reporter.hpp"
 
 #include <atomic>
 #include <deque>

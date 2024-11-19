@@ -2,3 +2,6 @@ build/
 generated_docs/
 deps/
 bazel-*
+perf.data
+*~
+report.txt
