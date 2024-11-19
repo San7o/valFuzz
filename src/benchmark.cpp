@@ -186,9 +186,10 @@ void set_one_benchmark(const std::string &one_benchmark)
 void run_benchmarks()
 {
     const size_t bigger_than_cachesize = get_cache_l3_size() * 2;
+    if (bigger_than_cachesize == 0)
+        return;
     long *p;
-    if (bigger_than_cachesize != 0)
-        p = new long[bigger_than_cachesize];
+    p = new long[bigger_than_cachesize];
     {
         std::lock_guard<std::mutex> lock(get_stream_mutex());
         std::cout << "Cache size: " << get_cache_l3_size() << "\n";
