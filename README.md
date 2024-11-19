@@ -213,6 +213,9 @@ benchmark_name,space_complexity,min_time,max_time,mean,standard_deviation,quanti
 You can quickly generate a graph with python by following the instructions
 in [plotting/README.md](plotting/README.md).
 
+![image](https://github.com/user-attachments/assets/0cae5078-2bf3-481d-a2e8-b822f2918bfb)
+
+
 # License
 
 This library falls under [MIT](./LICENSE) license.
