@@ -334,7 +334,7 @@ int main(int argc, char **argv)
     std::srand((unsigned int) seed);
 
     std::mt19937 gen = valfuzz::get_random_engine();
-    gen.seed(seed);
+    gen.seed(seed.load());
 
     valfuzz::get_function_execute_before()();
 
