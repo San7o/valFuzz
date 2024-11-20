@@ -31,6 +31,7 @@
 #include <mutex>
 #include <string>
 #include <thread>
+#include <optional>
 
 namespace valfuzz
 {

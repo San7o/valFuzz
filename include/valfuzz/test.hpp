@@ -30,6 +30,7 @@
 
 #include <atomic>
 #include <deque>
+#include <optional>
 #include <fstream>
 #include <functional>
 #include <iostream>

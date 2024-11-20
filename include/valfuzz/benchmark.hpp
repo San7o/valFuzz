@@ -29,6 +29,7 @@
 #include "valfuzz/common.hpp"
 #include "valfuzz/reporter.hpp"
 
+#include <limits>
 #include <atomic>
 #include <cmath>
 #include <cstdlib>
@@ -41,6 +42,7 @@
 #include <mutex>
 #include <string>
 #include <tuple>
+#include <optional>
 
 #ifdef openMP
 #include <omp.h>

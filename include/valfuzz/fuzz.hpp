@@ -28,7 +28,9 @@
 
 #include "valfuzz/common.hpp"
 
+#include <algorithm>
 #include <atomic>
+#include <optional>
 #include <deque>
 #include <fstream>
 #include <functional>

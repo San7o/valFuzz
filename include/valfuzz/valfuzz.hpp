@@ -35,6 +35,7 @@
 #include <atomic>
 #include <deque>
 #include <fstream>
+#include <optional>
 #include <functional>
 #include <iostream>
 #include <mutex>

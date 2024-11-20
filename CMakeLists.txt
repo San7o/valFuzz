@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.29.6)
+cmake_minimum_required(VERSION 3.15.4)
 project("valFuzz")
 
-set(CMAKE_CXX_STANDARD 23 REQUIRED)
+set(CMAKE_CXX_STANDARD 20)
 
 option(VALFUZZ_USE_CLANG "Use clang compiler" OFF)
 option(VALFUZZ_ENABLE_OPENMP "Enable OpenMP support" ON)

@@ -121,10 +121,7 @@ bool &get_run_one_benchmark()
 
 std::string &get_one_benchmark()
 {
-#if __cplusplus >= 202002L // C++20
-    constinit
-#endif
-        static std::string one_benchmark = "";
+    static std::string one_benchmark = "";
     return one_benchmark;
 }
 
