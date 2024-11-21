@@ -110,7 +110,7 @@ extern reporter_engine reporter_eg;
 	  reporter_eg.add_reporter( \
                       std::make_shared<in_rep>(in_rep()));	      	\
         }                                                                     \
-    } in_rep##_reporter_instance;
+    } in_rep##_reporter_instance
   
 class default_reporter : public reporter
 {

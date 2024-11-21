@@ -2,11 +2,11 @@
 
 namespace valfuzz
 {
+  reporter_engine reporter_eg;
+
   ADD_REPORTER(default_reporter);
   ADD_REPORTER(csv_reporter);
   ADD_REPORTER(none_reporter);
-  
-  reporter_engine reporter_eg;
 
   reporter::~reporter() {}
 
