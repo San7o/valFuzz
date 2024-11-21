@@ -70,7 +70,7 @@ public:
   reporter_engine() = default;
   ~reporter_engine() = default;
   
-  std::ostringstream report(struct report* rep, std::string id) const noexcept
+  std::ostringstream report(struct report* rep, std::string id) const
   {
     for (auto& r : reporters)
       if (r->id() == id)
