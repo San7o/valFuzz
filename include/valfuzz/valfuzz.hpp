@@ -62,4 +62,6 @@ void set_fuzz_one(const std::string &fuzz_one);
 void parse_args(int argc, char *argv[]);
 void print_header();
 
+int main(int argc, char **argv);
+
 } // namespace valfuzz

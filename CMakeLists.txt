@@ -1,13 +1,12 @@
-cmake_minimum_required(VERSION 3.15.4)
+cmake_minimum_required(VERSION 3.16)
 project("valFuzz")
 
 set(CMAKE_CXX_STANDARD 20)
 
+option(BUILD_SHARED_LIBS "Build shared library" ON)
 option(VALFUZZ_USE_CLANG "Use clang compiler" OFF)
 option(VALFUZZ_ENABLE_OPENMP "Enable OpenMP support" ON)
-option(VALFUZZ_BUILD_TESTS "Build tests" ON)
-option(VALFUZZ_BUILD_SHARED "Build shared library" ON)
-option(VALFUZZ_BUILD_STATIC "Build static library" OFF)
+option(VALFUZZ_BUILD_TESTS "Build tests" OFF)
 option(VALFUZZ_BUILD_CLOCK_PRECISION "Build an executable to
                           get the best clock's precision" OFF)
 option(VALFUZZ_BUILD_NO_OPTIMIZED "Build without optimizations" OFF)
@@ -38,6 +37,7 @@ list(APPEND VALFUZZ_TEST_SOURCES
     tests/simple_fuzz.cpp
     tests/generate_random_test.cpp
     tests/benchmark_test.cpp
+    tests/tests.cpp
 )
 
 if (VALFUZZ_USE_CLANG)
@@ -84,20 +84,17 @@ else()
     message(STATUS "Debug flags: ${CMAKE_CXX_FLAGS_DEBUG}")
 endif()
 
-if (VALFUZZ_BUILD_SHARED)
-    message("Building shared library")
-    add_library(valfuzz_shared SHARED ${VALFUZZ_SOURCES})
-    target_include_directories(valfuzz_shared PRIVATE ${VALFUZZ_INCLUDES})
-    target_compile_options(valfuzz_shared PRIVATE ${VALFUZZ_COMPILE_OPTIONS})
-    target_link_libraries(valfuzz_shared PRIVATE ${VALFUZZ_LINK_OPTIONS})
+if (BUILD_SHARED_LIBS)
+  message("Building shared library")
+  add_library(valfuzz SHARED ${VALFUZZ_SOURCES})
+else()
+  message("Building static library")
+  add_library(valfuzz STATIC ${VALFUZZ_SOURCES})
 endif()
-if (VALFUZZ_BUILD_STATIC)
-    message("Building static library")
-    add_library(valfuzz_static STATIC ${VALFUZZ_SOURCES})
-    target_include_directories(valfuzz_static PRIVATE ${VALFUZZ_INCLUDES})
-    target_compile_options(valfuzz_static PRIVATE ${VALFUZZ_COMPILE_OPTIONS})
-    target_link_libraries(valfuzz_static PRIVATE ${VALFUZZ_LINK_OPTIONS})
-endif()
+target_include_directories(valfuzz PRIVATE ${VALFUZZ_INCLUDES})
+target_compile_options(valfuzz PRIVATE ${VALFUZZ_COMPILE_OPTIONS})
+target_link_libraries(valfuzz PRIVATE ${VALFUZZ_LINK_OPTIONS})
+  
 if (VALFUZZ_BUILD_TESTS)
     message("Building tests")
     add_executable(asserts_test ${VALFUZZ_SOURCES} ${VALFUZZ_TEST_SOURCES})

@@ -341,8 +341,6 @@ void parse_args(int argc, char *argv[])
     }
 }
 
-} // namespace valfuzz
-
 int main(int argc, char **argv)
 {
     valfuzz::parse_args(argc, argv);
@@ -420,3 +418,5 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+} // namespace valfuzz
