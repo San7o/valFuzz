@@ -1,7 +1,7 @@
-// vim: set filetype=cpp :
 /// 
 /// \mainpage valFuzz Documentation
-/// ```
+///
+/// \code
 ///             _ _____
 /// __   ____ _| |  ___|   _ ________
 /// \ \ / / _` | | |_ | | | |_  /_  /
@@ -19,7 +19,8 @@
 /// Before test
 /// Seed: 1730108360
 /// Running 1337 tests...
-/// ```
+/// \endcode
+///
 /// Welcome to the official valFuzz documentation. This guide provides comprehensive
 /// information and practical examples to help you use valFuzz for your testing needs.
 /// 
@@ -31,17 +32,12 @@
 /// for easy extension and customization for your own need.
 ///
 /// \section installation Installation
-/// You can compile the library as a shared library or a static library using either cmake or bazel. valfuzz has no dependencies other than the standard library.
+/// You can compile the library as a shared library or a static library using cmake. valfuzz has no dependencies other than the standard library.
 ///
 /// \subsection cmake CMake
 /// \code
 /// cmake -Bbuild -DCMAKE_BUILD_TYPE=Release
 /// cmake --build build -j4
-/// \endcode
-///
-/// \subsection bazel Bazel
-/// \code
-/// bazel build //:libvalfuzz
 /// \endcode
 ///
 /// \section usage Usage
@@ -68,10 +64,11 @@
 /// 
 /// When an assertion fails, the program will output the test name, the line number and the assertion arguments
 /// that caused the failure. The program will then continue to run the other tests.
-/// ```
+///
+/// \code
 /// test: Simple Assertion Fail, line: 66, Assertion failed: 1 == 2
 /// test: Should Not Throw Fail, line: 85, Exception thrown
-/// ```
+/// \endcode
 ///
 /// \subsection Run Your First Test
 /// To run your first test, you need to define a test function using the `TEST` macro. You
@@ -88,9 +85,10 @@
 /// 
 /// Tests are automatically registered and run when the program starts. You can run a particular
 /// test by specifying the test name after `--test` as a command line argument:
-/// ```
+///
+/// \code
 /// ./my_test --test "Simple Assertion"
-/// ```
+/// \endcode
 ///
 /// \subsection setup Setup and Cleanup
 ///
@@ -146,9 +144,10 @@
 /// \endcode
 ///
 /// After defining the fuzz function, you can run it by passing `--fuzz` as a command line argument:
-/// ```
+///
+/// \code
 /// ./my_test --fuzz
-/// ```
+/// \endcode
 ///
 /// \subsection benchmarking Benchmarking
 ///
@@ -163,7 +162,8 @@
 /// > currently, the cache will be reset between benchmarks only on linux
 /// 
 /// For example:
-/// ```cpp
+///
+/// \code{.cpp}
 /// int sum_slow(int a, int b)
 /// {
 ///     int sum = 0;
@@ -180,13 +180,15 @@
 ///     int b = 2000;
 ///     RUN_BENCHMARK(a, sum_slow(a, b));
 /// }
-/// ```
+/// \endcode
 /// 
 /// Compile and run with `--benchmark` flag:
-/// ```bash
+///
+/// \code
 /// ./build/valfuzz --benchmark --verbose
-/// ```
-/// ```
+/// \endcode
+///
+/// \code
 /// Running benchmark: Sum slow
 /// benchmark: "Sum slow"
 ///  - space: 10000
@@ -196,7 +198,7 @@
 ///  - standard deviation: 3.02685e-06
 ///  - Q1: 1.8363e-05s
 ///  - Q3: 2.0115e-05s
-/// ```
+/// \endcode
 /// 
 /// The benchmark will be run 100000 times to get the average time. You
 /// can set the number of iterations using the `--num-iterations` flag.
@@ -204,9 +206,10 @@
 /// \subsection report Save a Benchmark Report
 /// You can save the results of your benchmark in a CSV file by passing `--report <file>`
 /// as a command line argument. The output will be saved using the following format:
-/// ```
+///
+/// \code
 /// name,space,min,max,mean,sd,q1,q3
-/// ```
+/// \endcode
 ///
 /// \subsection plotting Plotting
 ///
@@ -235,3 +238,4 @@
 /// - `--seed <seed>` - Set the seed for the random number generator.
 /// - `--report <file>` - Save benchmark report to a file.
 /// - `--help` - Display help information.
+///

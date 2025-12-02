@@ -25,14 +25,7 @@
 var NAVTREE =
 [
   [ "valFuzz", "index.html", [
-    [ "Contributing to the Engine", "md_docs_2CONTRIBUTING.html", [
-      [ "How to Contribute", "md_docs_2CONTRIBUTING.html#autotoc_md1", [
-        [ "Reporting Bugs", "md_docs_2CONTRIBUTING.html#autotoc_md2", null ],
-        [ "Suggesting Features", "md_docs_2CONTRIBUTING.html#autotoc_md3", null ],
-        [ "Contributing Code", "md_docs_2CONTRIBUTING.html#autotoc_md4", null ],
-        [ "License", "md_docs_2CONTRIBUTING.html#autotoc_md5", null ]
-      ] ]
-    ] ],
+    [ "valFuzz Documentation", "index.html", "index" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -56,7 +49,6 @@ var NAVTREE =
       [ "File List", "files.html", "files_dup" ],
       [ "Globals", "globals.html", [
         [ "All", "globals.html", null ],
-        [ "Functions", "globals_func.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -66,7 +58,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"namespacevalfuzz.html#ad755e73962d1e277ad7cb26f68fa5d2c"
+"namespacevalfuzz.html#af1155e43e4ee613e31f5ee1e53780112"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

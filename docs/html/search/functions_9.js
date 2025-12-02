@@ -1,11 +1,21 @@
 var searchData=
 [
-  ['report_0',['report',['../classvalfuzz_1_1reporter__engine.html#ae1729d824f0ee1e87a9cc5b79cbd9130',1,'valfuzz::reporter_engine']]],
-  ['reporter_1',['reporter',['../classvalfuzz_1_1reporter.html#ac333860f6d88a0eadfc5b68323dc92d4',1,'valfuzz::reporter']]],
-  ['reporter_5fengine_2',['reporter_engine',['../classvalfuzz_1_1reporter__engine.html#a85d23d66f091809ac6e1e34fca693e39',1,'valfuzz::reporter_engine']]],
-  ['run_5fbenchmarks_3',['run_benchmarks',['../namespacevalfuzz.html#ab19c770feaaad80ea5f72cb78799a23b',1,'valfuzz']]],
-  ['run_5ffuzz_5ftests_4',['run_fuzz_tests',['../namespacevalfuzz.html#a0e4f305c0d1e06d96a22976c83b267e6',1,'valfuzz']]],
-  ['run_5fone_5ffuzz_5',['run_one_fuzz',['../namespacevalfuzz.html#a61ebcffefe480b25546dbcd712202040',1,'valfuzz']]],
-  ['run_5fone_5ftest_6',['run_one_test',['../namespacevalfuzz.html#a625f80a479abf66910b7fdc4c308ef31',1,'valfuzz']]],
-  ['run_5ftests_7',['run_tests',['../namespacevalfuzz.html#a5b3445331870910acc9d99163c117ddd',1,'valfuzz']]]
+  ['set_5fdo_5fbenchmarks_0',['set_do_benchmarks',['../namespacevalfuzz.html#aa1e657ed93f98a006811f24785552da5',1,'valfuzz']]],
+  ['set_5fdo_5ffuzzing_1',['set_do_fuzzing',['../namespacevalfuzz.html#a7b5fd3fe28b985ce9c55337ab069e6eb',1,'valfuzz']]],
+  ['set_5ffunction_5fexecute_5fafter_2',['set_function_execute_after',['../namespacevalfuzz.html#a71a7ee04f820ff2d67fcb07a900daf5c',1,'valfuzz']]],
+  ['set_5ffunction_5fexecute_5fbefore_3',['set_function_execute_before',['../namespacevalfuzz.html#a466d23e5865115fc5d5937006187f4fb',1,'valfuzz']]],
+  ['set_5ffuzz_5fone_4',['set_fuzz_one',['../namespacevalfuzz.html#a872accd837b5362140c65295cac4c384',1,'valfuzz']]],
+  ['set_5fhas_5ffailed_5fonce_5',['set_has_failed_once',['../namespacevalfuzz.html#a7a22fa9873b363b8df5ae5ba6e851e69',1,'valfuzz']]],
+  ['set_5fheader_6',['set_header',['../namespacevalfuzz.html#aab67e13a54bb974cc8724d205739fee4',1,'valfuzz']]],
+  ['set_5fmax_5fnum_5fthreads_7',['set_max_num_threads',['../namespacevalfuzz.html#abcc79a530333d21f519fcf92fe9f2de7',1,'valfuzz']]],
+  ['set_5fmultithreaded_8',['set_multithreaded',['../namespacevalfuzz.html#a9b1a80d315bd17aba3a060b793ecb71b',1,'valfuzz']]],
+  ['set_5fnum_5fiterations_5fbenchmark_9',['set_num_iterations_benchmark',['../namespacevalfuzz.html#a2ffa5f926fa5acc632ce81f9f1f9128c',1,'valfuzz']]],
+  ['set_5fone_5fbenchmark_10',['set_one_benchmark',['../namespacevalfuzz.html#a98be229442609166497b2bf7ac7c8437',1,'valfuzz']]],
+  ['set_5freporter_11',['set_reporter',['../namespacevalfuzz.html#a1b7961fff71429dacf224c63c8f71e9d',1,'valfuzz']]],
+  ['set_5frun_5fone_5fbenchmark_12',['set_run_one_benchmark',['../namespacevalfuzz.html#af1155e43e4ee613e31f5ee1e53780112',1,'valfuzz']]],
+  ['set_5fsave_5ffile_13',['set_save_file',['../namespacevalfuzz.html#a1518f7c318a2c197410965f1edffadc4',1,'valfuzz']]],
+  ['set_5fsave_5fto_5ffile_14',['set_save_to_file',['../namespacevalfuzz.html#a4601c97ddedc17992cdb793646d52216',1,'valfuzz']]],
+  ['set_5fseed_15',['set_seed',['../namespacevalfuzz.html#ac2221d0a235f6350d8731d1917d3e3b9',1,'valfuzz']]],
+  ['set_5ftest_5fone_16',['set_test_one',['../namespacevalfuzz.html#a93e7bd0abc930fbc0d37f78b913e5a2f',1,'valfuzz']]],
+  ['set_5fverbose_17',['set_verbose',['../namespacevalfuzz.html#aec69f2195fec0a5fc37a5aa1b083e877',1,'valfuzz']]]
 ];

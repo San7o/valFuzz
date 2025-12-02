@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>valFuzz: Main Page</title>
+<title>valFuzz: valFuzz Documentation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">valFuzz<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">valFuzz<span id="projectnumber">&#160;1.2.0</span>
    </div>
   </td>
  </tr>
@@ -97,10 +97,188 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 </div>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">valFuzz Documentation</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">valFuzz Documentation </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><div class="fragment"><div class="line">            _ _____</div>
+<div class="line">__   ____ _| |  ___|   _ ________</div>
+<div class="line">\ \ / / _` | | |_ | | | |_  /_  /</div>
+<div class="line"> \ V / (_| | |  _|| |_| |/ / / /</div>
+<div class="line">  \_/ \__,_|_|_|   \__,_/___/___|</div>
+<div class="line"> </div>
+<div class="line">A modern testing &amp; fuzzing library <span class="keywordflow">for</span> C++</div>
+<div class="line">Settings:</div>
+<div class="line"> - Multithreaded: 1</div>
+<div class="line"> - Max threads: 4</div>
+<div class="line"> - Run Fuzzs: 0</div>
+<div class="line"> - Run Benchmarks: 0</div>
+<div class="line"> - Verbose: 0</div>
+<div class="line"> </div>
+<div class="line">Before test</div>
+<div class="line">Seed: 1730108360</div>
+<div class="line">Running 1337 tests...</div>
+</div><!-- fragment --><p>Welcome to the official valFuzz documentation. This guide provides comprehensive information and practical examples to help you use valFuzz for your testing needs.</p>
+<h1><a class="anchor" id="overview"></a>
+Overview</h1>
+<p>valFuzz is a lightweight testing, fuzzing and benchmarking framework for C++17 onwards. It uses modern standards and techniques to provide a robust and efficient framework for testing and fuzzing for small-medium size projects. The simpliciry of the library allows for easy extension and customization for your own need.</p>
+<h1><a class="anchor" id="installation"></a>
+Installation</h1>
+<p>You can compile the library as a shared library or a static library using cmake. valfuzz has no dependencies other than the standard library.</p>
+<h2><a class="anchor" id="cmake"></a>
+CMake</h2>
+<div class="fragment"><div class="line">cmake -Bbuild -DCMAKE_BUILD_TYPE=Release</div>
+<div class="line">cmake --build build -j4</div>
+</div><!-- fragment --><h1><a class="anchor" id="usage"></a>
+Usage</h1>
+<h2><a class="anchor" id="assertions"></a>
+Assertions</h2>
+<p>The library provides various macros for assertions to be used in your tests:</p><ul>
+<li><code>ASSERT</code> - Asserts that the given expression is true.</li>
+<li><code>ASSERT_EQ</code> - Asserts that the two given values are equal.</li>
+<li><code>ASSERT_NE</code> - Asserts that the two given values are not equal.</li>
+<li><code>ASSERT_LT</code> - Asserts that the first value is less than the second value.</li>
+<li><code>ASSERT_LE</code> - Asserts that the first value is less than or equal to the second value.</li>
+<li><code>ASSERT_GT</code> - Asserts that the first value is greater than the second value.</li>
+<li><code>ASSERT_GE</code> - Asserts that the first value is greater than or equal to the second value.</li>
+<li><code>ASSERT_THROW</code> - Asserts that the given expression throws an exception of the given type.</li>
+<li><code>ASSERT_NO_THROW</code> - Asserts that the given expression does not throw any exception.</li>
+</ul>
+<p>For example: </p><div class="fragment"><div class="line"><a class="code hl_define" href="test_8hpp.html#a0966b817b229d48e5ffc7feab19a0be6">ASSERT</a>(1 == 1);  <span class="comment">// Evaluates the expression</span></div>
+<div class="line"><a class="code hl_define" href="test_8hpp.html#a0086e0b898cbf7a680ba24ed898edb1f">ASSERT_NE</a>(1, 2); <span class="comment">// Evaluates the two expressions and compares them</span></div>
+<div class="line"><a class="code hl_define" href="test_8hpp.html#a8aaa8863231d2dcf58faa95a6f5abba5">ASSERT_THROW</a>(foo(), std::runtime_error); <span class="comment">// Evaluates the expression and checks if it throws the given exception</span></div>
+<div class="ttc" id="atest_8hpp_html_a0086e0b898cbf7a680ba24ed898edb1f"><div class="ttname"><a href="test_8hpp.html#a0086e0b898cbf7a680ba24ed898edb1f">ASSERT_NE</a></div><div class="ttdeci">#define ASSERT_NE(a, b)</div><div class="ttdef"><b>Definition</b> <a href="test_8hpp_source.html#l00040">test.hpp:40</a></div></div>
+<div class="ttc" id="atest_8hpp_html_a0966b817b229d48e5ffc7feab19a0be6"><div class="ttname"><a href="test_8hpp.html#a0966b817b229d48e5ffc7feab19a0be6">ASSERT</a></div><div class="ttdeci">#define ASSERT(cond)</div><div class="ttdef"><b>Definition</b> <a href="test_8hpp_source.html#l00022">test.hpp:22</a></div></div>
+<div class="ttc" id="atest_8hpp_html_a8aaa8863231d2dcf58faa95a6f5abba5"><div class="ttname"><a href="test_8hpp.html#a8aaa8863231d2dcf58faa95a6f5abba5">ASSERT_THROW</a></div><div class="ttdeci">#define ASSERT_THROW(expr, exception)</div><div class="ttdef"><b>Definition</b> <a href="test_8hpp_source.html#l00085">test.hpp:85</a></div></div>
+</div><!-- fragment --><p>When an assertion fails, the program will output the test name, the line number and the assertion arguments that caused the failure. The program will then continue to run the other tests.</p>
+<div class="fragment"><div class="line">test: Simple Assertion Fail, line: 66, Assertion failed: 1 == 2</div>
+<div class="line">test: Should Not Throw Fail, line: 85, Exception thrown</div>
+</div><!-- fragment --><h2><a class="anchor" id="Run"></a>
+Your First Test</h2>
+<p>To run your first test, you need to define a test function using the <code>TEST</code> macro. You will have to specify an unique name for the test and a string name for display purposes.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="valfuzz_8hpp.html">valfuzz/valfuzz.hpp</a>&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="test_8hpp.html#a862b2db61d49ccb68e9fedd1fefccc43">TEST</a>(simple_assertion, <span class="stringliteral">&quot;Simple Assertion&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">   <a class="code hl_define" href="test_8hpp.html#a0966b817b229d48e5ffc7feab19a0be6">ASSERT</a>(1 == 1);</div>
+<div class="line">}</div>
+<div class="ttc" id="atest_8hpp_html_a862b2db61d49ccb68e9fedd1fefccc43"><div class="ttname"><a href="test_8hpp.html#a862b2db61d49ccb68e9fedd1fefccc43">TEST</a></div><div class="ttdeci">#define TEST(name, pretty_name)</div><div class="ttdef"><b>Definition</b> <a href="test_8hpp_source.html#l00144">test.hpp:144</a></div></div>
+<div class="ttc" id="avalfuzz_8hpp_html"><div class="ttname"><a href="valfuzz_8hpp.html">valfuzz.hpp</a></div></div>
+</div><!-- fragment --><p>Tests are automatically registered and run when the program starts. You can run a particular test by specifying the test name after <code>--test</code> as a command line argument:</p>
+<div class="fragment"><div class="line">./my_test --test <span class="stringliteral">&quot;Simple Assertion&quot;</span></div>
+</div><!-- fragment --><h2><a class="anchor" id="setup"></a>
+Setup and Cleanup</h2>
+<p>It is often necessary to perform some setup and cleanup operations before tests are run. You can define those functions using the <code>BEFORE</code> and <code>AFTER</code> macros respectively. The setup function will be run before all tests and the cleanup function will be run after all tests. </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="valfuzz_8hpp.html">valfuzz/valfuzz.hpp</a>&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="test_8hpp.html#a7e8ec6104f88c2824f334ec993a4acba">BEFORE</a>()</div>
+<div class="line">{</div>
+<div class="line">   std::cout &lt;&lt; <span class="stringliteral">&quot;Before test&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="test_8hpp.html#a862b2db61d49ccb68e9fedd1fefccc43">TEST</a>(a_test, <span class="stringliteral">&quot;Another simple test&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">   <a class="code hl_define" href="test_8hpp.html#a9cc34fd87cb865c77439a5d39b3b111b">ASSERT_EQ</a>(1, 1);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="test_8hpp.html#a7c305cf3eb7b2a77a0d9e2f27d2c5f61">AFTER</a>()</div>
+<div class="line">{</div>
+<div class="line">   std::cout &lt;&lt; <span class="stringliteral">&quot;After test&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line">}</div>
+<div class="ttc" id="atest_8hpp_html_a7c305cf3eb7b2a77a0d9e2f27d2c5f61"><div class="ttname"><a href="test_8hpp.html#a7c305cf3eb7b2a77a0d9e2f27d2c5f61">AFTER</a></div><div class="ttdeci">#define AFTER()</div><div class="ttdef"><b>Definition</b> <a href="test_8hpp_source.html#l00166">test.hpp:166</a></div></div>
+<div class="ttc" id="atest_8hpp_html_a7e8ec6104f88c2824f334ec993a4acba"><div class="ttname"><a href="test_8hpp.html#a7e8ec6104f88c2824f334ec993a4acba">BEFORE</a></div><div class="ttdeci">#define BEFORE()</div><div class="ttdef"><b>Definition</b> <a href="test_8hpp_source.html#l00155">test.hpp:155</a></div></div>
+<div class="ttc" id="atest_8hpp_html_a9cc34fd87cb865c77439a5d39b3b111b"><div class="ttname"><a href="test_8hpp.html#a9cc34fd87cb865c77439a5d39b3b111b">ASSERT_EQ</a></div><div class="ttdeci">#define ASSERT_EQ(a, b)</div><div class="ttdef"><b>Definition</b> <a href="test_8hpp_source.html#l00031">test.hpp:31</a></div></div>
+</div><!-- fragment --><h2><a class="anchor" id="fuzzing"></a>
+Fuzzing</h2>
+<p>valFuzz provides a simple interface for fuzzing your code. You can define a fuzz function using the <code>FUZZME</code> macro, this function will be called repedetly on multiple threads until you stop the program. You can disable multithreading by passing <code>--no-multithread</code> as a command line argument. </p><div class="fragment"><div class="line"><a class="code hl_define" href="fuzz_8hpp.html#a2f4edc7d26bd42c6f982942f4ae6bbf7">FUZZME</a>(naive_fuzzing, <span class="stringliteral">&quot;Naive fuzzing&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code hl_define" href="test_8hpp.html#a9cc34fd87cb865c77439a5d39b3b111b">ASSERT_EQ</a>(1==1);</div>
+<div class="line">}</div>
+<div class="ttc" id="afuzz_8hpp_html_a2f4edc7d26bd42c6f982942f4ae6bbf7"><div class="ttname"><a href="fuzz_8hpp.html#a2f4edc7d26bd42c6f982942f4ae6bbf7">FUZZME</a></div><div class="ttdeci">#define FUZZME(fun_name, pretty_name)</div><div class="ttdef"><b>Definition</b> <a href="fuzz_8hpp_source.html#l00031">fuzz.hpp:31</a></div></div>
+</div><!-- fragment --><p> You can get random values using the <code>T get_random&lt;T&gt;()</code> function, where <code>T</code> is the type of the value you want to get. The function will return a random value of the given type, allowed types are:</p><ul>
+<li><code>int</code></li>
+<li><code>float</code></li>
+<li><code>double</code></li>
+<li><code>char</code></li>
+<li><code>std::string</code></li>
+</ul>
+<div class="fragment"><div class="line"><a class="code hl_define" href="fuzz_8hpp.html#a2f4edc7d26bd42c6f982942f4ae6bbf7">FUZZME</a>(divide_fuzzing, <span class="stringliteral">&quot;Divide fuzzing&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">int</span> a = <a class="code hl_function" href="namespacevalfuzz.html#ade653ec323d6ed601561455a67436b24">valfuzz::get_random&lt;int&gt;</a>();</div>
+<div class="line">    <span class="keywordtype">int</span> b = <a class="code hl_function" href="namespacevalfuzz.html#ade653ec323d6ed601561455a67436b24">valfuzz::get_random&lt;int&gt;</a>();</div>
+<div class="line">    <span class="keywordtype">int</span> ret = foo_bar(a, b);</div>
+<div class="line">    <a class="code hl_define" href="test_8hpp.html#a8f0eabb05f044ae4b864b3deb4cb5624">ASSERT_NO_THROW</a>(ret);</div>
+<div class="line">}</div>
+<div class="ttc" id="anamespacevalfuzz_html_ade653ec323d6ed601561455a67436b24"><div class="ttname"><a href="namespacevalfuzz.html#ade653ec323d6ed601561455a67436b24">valfuzz::get_random</a></div><div class="ttdeci">T get_random()</div></div>
+<div class="ttc" id="atest_8hpp_html_a8f0eabb05f044ae4b864b3deb4cb5624"><div class="ttname"><a href="test_8hpp.html#a8f0eabb05f044ae4b864b3deb4cb5624">ASSERT_NO_THROW</a></div><div class="ttdeci">#define ASSERT_NO_THROW(expr)</div><div class="ttdef"><b>Definition</b> <a href="test_8hpp_source.html#l00105">test.hpp:105</a></div></div>
+</div><!-- fragment --><p>After defining the fuzz function, you can run it by passing <code>--fuzz</code> as a command line argument:</p>
+<div class="fragment"><div class="line">./my_test --fuzz</div>
+</div><!-- fragment --><h2><a class="anchor" id="benchmarking"></a>
+Benchmarking</h2>
+<p>You can define a benchmark function with the macro <code>BENCHMARK</code>. Inside the benchmark, you can do any setup / cleanup and run an expression to be benchmarked with <code>BENCHMARK_RUN</code>.</p>
+<p>The first argument to <code>BENCHMARK_RUN</code> is the input size, and the second argument is the expression to be benchmarked. The input size is specified for logging purposes only and can be set to any value that can be printed with <code>std::cout</code>.</p>
+<blockquote class="doxtable">
+<p>&zwj;currently, the cache will be reset between benchmarks only on linux </p>
+</blockquote>
+<p>For example:</p>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> sum_slow(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">int</span> sum = 0;</div>
+<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; a; i++)</div>
+<div class="line">    {</div>
+<div class="line">        sum += b;</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordflow">return</span> sum;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="benchmark_8hpp.html#af44e5a1addefeafe48943e1b66e43559">BENCHMARK</a>(bench_sum_slow, <span class="stringliteral">&quot;Sum slow&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">int</span> a = 1000;</div>
+<div class="line">    <span class="keywordtype">int</span> b = 2000;</div>
+<div class="line">    <a class="code hl_define" href="benchmark_8hpp.html#a94cceb77d67d99b090abbc5cdbbae4da">RUN_BENCHMARK</a>(a, sum_slow(a, b));</div>
+<div class="line">}</div>
+<div class="ttc" id="abenchmark_8hpp_html_a94cceb77d67d99b090abbc5cdbbae4da"><div class="ttname"><a href="benchmark_8hpp.html#a94cceb77d67d99b090abbc5cdbbae4da">RUN_BENCHMARK</a></div><div class="ttdeci">#define RUN_BENCHMARK(input_size,...)</div><div class="ttdef"><b>Definition</b> <a href="benchmark_8hpp_source.html#l00047">benchmark.hpp:47</a></div></div>
+<div class="ttc" id="abenchmark_8hpp_html_af44e5a1addefeafe48943e1b66e43559"><div class="ttname"><a href="benchmark_8hpp.html#af44e5a1addefeafe48943e1b66e43559">BENCHMARK</a></div><div class="ttdeci">#define BENCHMARK(name, pretty_name)</div><div class="ttdef"><b>Definition</b> <a href="benchmark_8hpp_source.html#l00036">benchmark.hpp:36</a></div></div>
+</div><!-- fragment --><p>Compile and run with <code>--benchmark</code> flag:</p>
+<div class="fragment"><div class="line">./build/<a class="code hl_namespace" href="namespacevalfuzz.html">valfuzz</a> --benchmark --verbose</div>
+<div class="ttc" id="anamespacevalfuzz_html"><div class="ttname"><a href="namespacevalfuzz.html">valfuzz</a></div><div class="ttdef"><b>Definition</b> <a href="benchmark_8hpp_source.html#l00029">benchmark.hpp:30</a></div></div>
+</div><!-- fragment --><div class="fragment"><div class="line">Running benchmark: Sum slow</div>
+<div class="line">benchmark: <span class="stringliteral">&quot;Sum slow&quot;</span></div>
+<div class="line"> - space: 10000</div>
+<div class="line"> - min: 1.7115e-05s</div>
+<div class="line"> - max: 9.2012e-05s</div>
+<div class="line"> - mean: 1.93739e-05s</div>
+<div class="line"> - standard deviation: 3.02685e-06</div>
+<div class="line"> - Q1: 1.8363e-05s</div>
+<div class="line"> - Q3: 2.0115e-05s</div>
+</div><!-- fragment --><p>The benchmark will be run 100000 times to get the average time. You can set the number of iterations using the <code>--num-iterations</code> flag.</p>
+<h2><a class="anchor" id="report"></a>
+Save a Benchmark Report</h2>
+<p>You can save the results of your benchmark in a CSV file by passing <code>--report &lt;file&gt;</code> as a command line argument. The output will be saved using the following format:</p>
+<div class="fragment"><div class="line">name,space,min,max,mean,sd,q1,q3</div>
+</div><!-- fragment --><h2><a class="anchor" id="plotting"></a>
+Plotting</h2>
+<p>After you have collected the benchmark data, you can generate plots and graphs using python templates and examples provided in the <code>plotting</code> directory. The templates use <code>seaborn</code> and <code>matplotlib</code> libraries to generate the graphs.</p>
+<h2><a class="anchor" id="multithreading"></a>
+Multithreading</h2>
+<p>All tests and fuzz functions are run on multiple threads by default. You can disable multithreading by passing <code>--no-multithread</code> as a command line argument.</p>
+<h2><a class="anchor" id="command_line"></a>
+Command Line Arguments</h2>
+<p>You can pass the following command line arguments to the program:</p><ul>
+<li><code>--test &lt;test_name&gt;</code> - Run a specific test by name.</li>
+<li><code>--fuzz</code> - Run all fuzz functions.</li>
+<li><code>--fuzz &lt;fuzz_name&gt;</code> - Run a specific fuzz function by name.</li>
+<li><code>--benchmark</code> - Run benchmarks.</li>
+<li><code>--num-iterations &lt;num&gt;</code> - Set the number of iterations for benchmarks.</li>
+<li><code>--run-one-benchmark &lt;name&gt;</code> - run a specific benchmark</li>
+<li><code>--no-multithread</code> - Disable multithreading.</li>
+<li><code>--verbose</code> - Enable verbose output.</li>
+<li><code>--max-threads &lt;n&gt;</code> - Set the maximum number of threads to use.</li>
+<li><code>--no-header</code> - Disable the header print at the start.</li>
+<li><code>--seed &lt;seed&gt;</code> - Set the seed for the random number generator.</li>
+<li><code>--report &lt;file&gt;</code> - Save benchmark report to a file.</li>
+<li><code>--help</code> - Display help information. </li>
+</ul>
+</div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
 </div><!-- doc-content -->

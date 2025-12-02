@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['parse_5fargs_0',['parse_args',['../namespacevalfuzz.html#ad755e73962d1e277ad7cb26f68fa5d2c',1,'valfuzz']]],
-  ['pop_5ffuzz_5for_5fnull_1',['pop_fuzz_or_null',['../namespacevalfuzz.html#add0601f208f73272343f87bd0001755d',1,'valfuzz']]],
-  ['pop_5ftest_5for_5fnull_2',['pop_test_or_null',['../namespacevalfuzz.html#a3ba033ca6f7bb3cf08d38f617578c441',1,'valfuzz']]],
-  ['print_5fheader_3',['print_header',['../namespacevalfuzz.html#a716eb16c915503b625a3c8a4b19cbebc',1,'valfuzz']]]
+  ['q1_0',['q1',['../structvalfuzz_1_1report.html#afd2d3dbd331b38d43b177ea02c478e51',1,'valfuzz::report']]],
+  ['q2_1',['q2',['../structvalfuzz_1_1report.html#ad155c5a8b385d8b9700a6239b9e4ce40',1,'valfuzz::report']]]
 ];

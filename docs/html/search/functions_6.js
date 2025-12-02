@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['main_0',['main',['../namespacevalfuzz.html#a5603f2a39ead88dba4250f05e647c2fa',1,'valfuzz']]],
-  ['matrix_5fmultiply_1',['matrix_multiply',['../gbenchmarks_8cpp.html#a6888ae3ab57e9d767f25e31a80d02276',1,'gbenchmarks.cpp']]]
+  ['output_0',['output',['../classvalfuzz_1_1reporter.html#a601d220cd9d3f8455e63d4f3563cbf55',1,'valfuzz::reporter::output()'],['../classvalfuzz_1_1default__reporter.html#ab960cb0c113201158a5436f891d8e70a',1,'valfuzz::default_reporter::output()'],['../classvalfuzz_1_1csv__reporter.html#a86a30530c50e6422827097615200abc4',1,'valfuzz::csv_reporter::output()'],['../classvalfuzz_1_1none__reporter.html#a72eec24728fda451603537cf5d7fe31c',1,'valfuzz::none_reporter::output()']]]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['default_5freporter_0',['default_reporter',['../classvalfuzz_1_1default__reporter.html',1,'valfuzz']]]
+  ['default_5freporter_0',['default_reporter',['../classvalfuzz_1_1default__reporter.html',1,'valfuzz']]],
+  ['documentation_1',['valFuzz Documentation',['../index.html',1,'']]]
 ];
