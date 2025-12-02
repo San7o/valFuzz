@@ -26,5 +26,5 @@ jobs:
 
     - name: Test
       working-directory: ${{github.workspace}}/build
-      run: ./asserts_test
+      run: ./valfuzz_test
 
