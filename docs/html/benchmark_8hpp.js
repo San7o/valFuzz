@@ -1,0 +1,25 @@
+var benchmark_8hpp =
+[
+    [ "BENCHMARK", "benchmark_8hpp.html#af44e5a1addefeafe48943e1b66e43559", null ],
+    [ "NUM_ITERATIONS_BENCHMARK", "benchmark_8hpp.html#accfc1da09f7bb98799c7c6b31175c813", null ],
+    [ "RUN_BENCHMARK", "benchmark_8hpp.html#a94cceb77d67d99b090abbc5cdbbae4da", null ],
+    [ "benchmark_function", "benchmark_8hpp.html#adef39659aebea143d5b43390e19a7d83", null ],
+    [ "benchmark_pair", "benchmark_8hpp.html#a7252e408879568667f1eb0a891aab110", null ],
+    [ "add_benchmark", "benchmark_8hpp.html#aa744543594524063bb8d64a1aefc5983", null ],
+    [ "get_benchmarks", "benchmark_8hpp.html#adfeaae3adb774f36d99ba232cd97775c", null ],
+    [ "get_cache_l3_size", "benchmark_8hpp.html#ad21664d7886a354a848d458e6f34c1c2", null ],
+    [ "get_do_benchmarks", "benchmark_8hpp.html#a0c990250faedf1b7e608bdc10d3ee23e", null ],
+    [ "get_num_benchmarks", "benchmark_8hpp.html#aaf65f9d14aeec8d91764a2167685f4a3", null ],
+    [ "get_num_iterations_benchmark", "benchmark_8hpp.html#a0c086793bc1557ca4b0f0e6d311867fb", null ],
+    [ "get_one_benchmark", "benchmark_8hpp.html#ad156eefd3ec2d4c37f49e082226a776f", null ],
+    [ "get_run_one_benchmark", "benchmark_8hpp.html#a37f5aaff27bb8da24c0b7bf94b443988", null ],
+    [ "get_save_file", "benchmark_8hpp.html#a9c42da11b37dd5c4310a9a21cabece1a", null ],
+    [ "get_save_to_file", "benchmark_8hpp.html#ab40323d5bf7539f684370b7a651cf0d4", null ],
+    [ "run_benchmarks", "benchmark_8hpp.html#ab19c770feaaad80ea5f72cb78799a23b", null ],
+    [ "set_do_benchmarks", "benchmark_8hpp.html#aa1e657ed93f98a006811f24785552da5", null ],
+    [ "set_num_iterations_benchmark", "benchmark_8hpp.html#a2ffa5f926fa5acc632ce81f9f1f9128c", null ],
+    [ "set_one_benchmark", "benchmark_8hpp.html#a98be229442609166497b2bf7ac7c8437", null ],
+    [ "set_run_one_benchmark", "benchmark_8hpp.html#af1155e43e4ee613e31f5ee1e53780112", null ],
+    [ "set_save_file", "benchmark_8hpp.html#a1518f7c318a2c197410965f1edffadc4", null ],
+    [ "set_save_to_file", "benchmark_8hpp.html#a4601c97ddedc17992cdb793646d52216", null ]
+];

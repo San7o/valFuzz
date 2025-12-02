@@ -1,36 +1,15 @@
-/*
- * MIT License
- *
- * Copyright (c) 2024 Giovanni Santini
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
- */
+// SPDX-License-Identifier: MIT
+// Author:  Giovanni Santini
+// Mail:    giovanni.santini@proton.me
+// Github:  @San7o
 
 #pragma once
 
-#include <sstream>
-#include <optional>
+#include <iostream>
 #include <memory>
+#include <optional>
+#include <sstream>
 #include <vector>
-#include <iostream> 
 
 namespace valfuzz
 {
@@ -62,19 +41,19 @@ public:
 };
 
 /**
-  * This class stores and retrieves reporters
-  */
+ * This class stores and retrieves reporters
+ */
 class reporter_engine
 {
-public: 
+public:
   reporter_engine() = default;
   ~reporter_engine() = default;
-  
-  std::ostringstream report(struct report* rep, std::string id) const
+
+  std::ostringstream report(struct report *rep, std::string id) const
   {
-    for (auto& r : reporters)
+    for (auto &r : reporters)
       if (r->id() == id)
-	  return r->output(rep);
+        return r->output(rep);
     return std::ostringstream();
   }
 
@@ -83,16 +62,16 @@ public:
     this->reporters.push_back(in_reporter);
   }
 
-  bool has([[maybe_unused]]std::string id)
+  bool has([[maybe_unused]] std::string id)
   {
-    for (auto& r : reporters)
-      {
-	if (r->id() == id)
-	  return true;
-      }
+    for (auto &r : reporters)
+    {
+      if (r->id() == id)
+        return true;
+    }
     return false;
   }
-  
+
 private:
   std::vector<std::shared_ptr<reporter>> reporters;
 };
@@ -102,16 +81,15 @@ private:
  */
 extern reporter_engine reporter_eg;
 
-#define ADD_REPORTER(in_rep) \
-    static struct in_rep##_reporter \
-    {                                                                         \
-        in_rep##_reporter()                                                   \
-        {                                                                     \
-	  reporter_eg.add_reporter( \
-                      std::make_shared<in_rep>(in_rep()));	      	\
-        }                                                                     \
-    } in_rep##_reporter_instance
-  
+#define ADD_REPORTER(in_rep)                                                   \
+  static struct in_rep##_reporter                                              \
+  {                                                                            \
+    in_rep##_reporter()                                                        \
+    {                                                                          \
+      reporter_eg.add_reporter(std::make_shared<in_rep>(in_rep()));            \
+    }                                                                          \
+  } in_rep##_reporter_instance
+
 class default_reporter : public reporter
 {
 public:
@@ -123,14 +101,11 @@ public:
   {
     std::ostringstream oss;
     oss << "benchmark: \"" << rep->benchmark_name
-		<< "\"\n - space: " << rep->input_size
-                << "\n - min: " << rep->min
-		<< "s\n - max: " << rep->max
-		<< "s\n - median: " << rep->median
-		<< "s\n - mean: " << rep->mean
-		<< "s\n - standard deviation: " << rep->standard_deviation
-		<< "\n - Q1: " << rep->q1
-		<< "s\n - Q3: " << rep->q2 << "\n";
+        << "\"\n - space: " << rep->input_size << "\n - min: " << rep->min
+        << "s\n - max: " << rep->max << "s\n - median: " << rep->median
+        << "s\n - mean: " << rep->mean
+        << "s\n - standard deviation: " << rep->standard_deviation
+        << "\n - Q1: " << rep->q1 << "s\n - Q3: " << rep->q2 << "\n";
     return oss;
   }
 };
@@ -145,15 +120,10 @@ public:
   std::ostringstream output(struct report *rep) const override
   {
     std::ostringstream oss;
-    oss << "\"" << rep->benchmark_name
-		<< "\"," << rep->input_size
-                << "," << rep->min
-		<< "," << rep->max
-		<< "," << rep->median
-		<< "," << rep->mean
-		<< "," << rep->standard_deviation
-		<< "," << rep->q1
-		<< "," << rep->q2 << "\n";
+    oss << "\"" << rep->benchmark_name << "\"," << rep->input_size << ","
+        << rep->min << "," << rep->max << "," << rep->median << "," << rep->mean
+        << "," << rep->standard_deviation << "," << rep->q1 << "," << rep->q2
+        << "\n";
     return oss;
   }
 };
@@ -168,7 +138,7 @@ public:
   {
     return "none";
   }
-  std::ostringstream output([[maybe_unused]]struct report *rep) const override
+  std::ostringstream output([[maybe_unused]] struct report *rep) const override
   {
     std::ostringstream oss;
     return oss;
@@ -177,5 +147,5 @@ public:
 
 std::string &get_reporter();
 void set_reporter(std::string rep);
-  
-} // valfuzz
+
+} // namespace valfuzz

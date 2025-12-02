@@ -1,3 +1,9 @@
+# SPDX-License-Identifier: MIT
+# Author:  Giovanni Santini
+# Mail:    giovanni.santini@proton.me
+# Github:  @San7o
+
+
 import pandas as pd
 from unum import Unum
 from data.sys_data import sys_data

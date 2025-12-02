@@ -1,7 +1,7 @@
 .PHONY: format, docs
 
 format:
-	find include src tests -iname "*.cpp" -o -iname "*.hpp" | xargs clang-format -i
+	find include src tests -iname "*.cpp" -o -iname "*.hpp" | xargs clang-format -i --style=file:./utils/.clang-format
 
 docs:
-	doxygen doxygen.conf
+	doxygen docs/doxygen.conf

@@ -1,30 +1,9 @@
-/*
- * MIT License
- *
- * Copyright (c) 2024 Giovanni Santini
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
- */
+// SPDX-License-Identifier: MIT
+// Author:  Giovanni Santini
+// Mail:    giovanni.santini@proton.me
+// Github:  @San7o
 
-#include "valfuzz/common.hpp"
+#include <valfuzz/common.hpp>
 
 namespace valfuzz
 {
@@ -32,56 +11,55 @@ namespace valfuzz
 std::mutex &get_stream_mutex()
 {
 #if __cplusplus >= 202002L // C++20
-    constinit
+  constinit
 #endif
     static std::mutex stream_mutex;
-    return stream_mutex;
+  return stream_mutex;
 }
 
 std::atomic<bool> &get_verbose()
 {
 #if __cplusplus >= 202002L // C++20
-    constinit
+  constinit
 #endif
     static std::atomic<bool>
-            verbose = false;
-    return verbose;
+      verbose = false;
+  return verbose;
 }
 
 std::atomic<long unsigned int> &get_max_num_threads()
 {
 #if __cplusplus >= 202002L // C++20
-    constinit
+  constinit
 #endif
     static std::atomic<long unsigned int>
-            max_num_threads = 4;
-    return max_num_threads;
+      max_num_threads = 4;
+  return max_num_threads;
 }
 
 std::mutex &get_tests_mutex()
 {
 #if __cplusplus >= 202002L // C++20
-    constinit
+  constinit
 #endif
     static std::mutex tests_mutex;
-    return tests_mutex;
+  return tests_mutex;
 }
 
 std::atomic<bool> &get_is_threaded()
 {
 #if __cplusplus >= 202002L // C++20
-    constinit
+  constinit
 #endif
     static std::atomic<bool>
-            is_threaded = true;
-    return is_threaded;
+      is_threaded = true;
+  return is_threaded;
 }
 
 std::vector<std::thread> &get_thread_pool()
 {
-    static std::vector<std::thread>
-            thread_pool;
-    return thread_pool;
+  static std::vector<std::thread> thread_pool;
+  return thread_pool;
 }
 
 } // namespace valfuzz
