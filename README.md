@@ -60,12 +60,6 @@ cmake -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j 4
 ```
 
-### bazel
-
-```
-bazel build //:libvalfuzz
-```
-
 ### cpm
 
 You can easily use [cpm](https://github.com/cpm-cmake/CPM.cmake) to include
@@ -77,15 +71,6 @@ CPMAddPackage(
     GIT_TAG v1.1.0
     DOWNLOAD_ONLY True
 )
-```
-
-### meson
-
-```
-[wrap-git]
-url = https://github.com/San7o/valFuzz
-revision = v1.1.0
-depth = 1
 ```
 
 # Documentation
