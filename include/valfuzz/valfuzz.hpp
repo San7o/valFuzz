@@ -24,10 +24,10 @@
 namespace valfuzz
 {
 
-std::atomic<bool> &get_header();
-std::atomic<bool> &get_do_fuzzing();
-std::optional<std::string> &get_test_one();
-std::optional<std::string> &get_fuzz_one();
+std::atomic<bool>&            get_header();
+std::atomic<bool>&            get_do_fuzzing();
+std::optional<std::string>&   get_test_one();
+std::optional<std::string>&   get_fuzz_one();
 
 void set_multithreaded(bool is_threaded);
 void set_max_num_threads(long unsigned int max_num_threads);

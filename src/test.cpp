@@ -45,19 +45,19 @@ std::function<void()> &get_function_execute_after()
 void set_function_execute_before(std::function<void()> f)
 {
   auto &function_execute_before = get_function_execute_before();
-  function_execute_before = f;
+  function_execute_before       = f;
 }
 
 void set_function_execute_after(std::function<void()> f)
 {
   auto &function_execute_after = get_function_execute_after();
-  function_execute_after = f;
+  function_execute_after       = f;
 }
 
 void set_has_failed_once(bool has_failed_once)
 {
   auto &has_failed_once_ref = get_has_failed_once();
-  has_failed_once_ref = has_failed_once;
+  has_failed_once_ref       = has_failed_once;
 }
 
 void add_test(const std::string &name, test_function test)

@@ -33,7 +33,7 @@ struct report
 class reporter
 {
 public:
-  reporter() = default;
+  reporter()          = default;
   virtual ~reporter() = 0;
 
   virtual std::string id() const = 0;
@@ -46,7 +46,7 @@ public:
 class reporter_engine
 {
 public:
-  reporter_engine() = default;
+  reporter_engine()  = default;
   ~reporter_engine() = default;
 
   std::ostringstream report(struct report *rep, std::string id) const
@@ -146,6 +146,6 @@ public:
 };
 
 std::string &get_reporter();
-void set_reporter(std::string rep);
+void         set_reporter(std::string rep);
 
 } // namespace valfuzz

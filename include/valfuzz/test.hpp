@@ -122,10 +122,10 @@
 namespace valfuzz
 {
 
-std::deque<valfuzz::test_pair> &get_tests();
-std::mutex &get_test_mutex();
-long long unsigned int get_num_tests();
-std::atomic<bool> &get_has_failed_once();
+std::deque<valfuzz::test_pair>&  get_tests();
+std::mutex&                      get_test_mutex();
+long long unsigned int           get_num_tests();
+std::atomic<bool>&               get_has_failed_once();
 
 std::function<void()> &get_function_execute_before();
 std::function<void()> &get_function_execute_after();

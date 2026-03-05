@@ -98,15 +98,15 @@ namespace valfuzz
 typedef std::function<void(std::string)> benchmark_function;
 typedef std::pair<std::string, benchmark_function> benchmark_pair;
 
-unsigned long get_cache_l3_size();
-bool &get_do_benchmarks();
-int &get_num_iterations_benchmark();
-bool &get_run_one_benchmark();
-std::string &get_one_benchmark();
-long long unsigned int get_num_benchmarks();
-std::deque<benchmark_pair> &get_benchmarks();
-std::atomic<bool> &get_save_to_file();
-std::ofstream &get_save_file();
+unsigned long                  get_cache_l3_size();
+bool&                          get_do_benchmarks();
+int&                           get_num_iterations_benchmark();
+bool&                          get_run_one_benchmark();
+std::string&                   get_one_benchmark();
+long long unsigned int         get_num_benchmarks();
+std::deque<benchmark_pair>&    get_benchmarks();
+std::atomic<bool>&             get_save_to_file();
+std::ofstream&                 get_save_file();
 
 void set_save_to_file(bool save_to_file);
 void set_save_file(const std::filesystem::path &save_to_file_path);

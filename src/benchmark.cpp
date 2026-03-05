@@ -113,7 +113,7 @@ std::ofstream &get_save_file()
 void set_save_to_file(bool save_to_file)
 {
   auto &save_to_file_ref = get_save_to_file();
-  save_to_file_ref = save_to_file;
+  save_to_file_ref       = save_to_file;
 }
 
 void set_save_file(const std::filesystem::path &output_dir)
@@ -138,25 +138,25 @@ void add_benchmark(const std::string &name, benchmark_function benchmark)
 void set_do_benchmarks(bool do_benchmarks)
 {
   auto &do_benchmarks_ref = get_do_benchmarks();
-  do_benchmarks_ref = do_benchmarks;
+  do_benchmarks_ref       = do_benchmarks;
 }
 
 void set_num_iterations_benchmark(int num_iterations)
 {
   auto &num_iterations_benchmark = get_num_iterations_benchmark();
-  num_iterations_benchmark = num_iterations;
+  num_iterations_benchmark       = num_iterations;
 }
 
 void set_run_one_benchmark(bool run_one_benchmark)
 {
   auto &run_one_benchmark_ref = get_run_one_benchmark();
-  run_one_benchmark_ref = run_one_benchmark;
+  run_one_benchmark_ref       = run_one_benchmark;
 }
 
 void set_one_benchmark(const std::string &one_benchmark)
 {
   auto &one_benchmark_ref = get_one_benchmark();
-  one_benchmark_ref = one_benchmark;
+  one_benchmark_ref       = one_benchmark;
 }
 
 void run_benchmarks()

@@ -59,49 +59,49 @@ std::atomic<long unsigned int> &get_seed()
 void set_multithreaded(bool is_threaded)
 {
   auto &is_threaded_ref = get_is_threaded();
-  is_threaded_ref = is_threaded;
+  is_threaded_ref       = is_threaded;
 }
 
 void set_max_num_threads(long unsigned int max_num_threads)
 {
   auto &max_num_threads_ref = get_max_num_threads();
-  max_num_threads_ref = max_num_threads;
+  max_num_threads_ref       = max_num_threads;
 }
 
 void set_verbose(bool verbose)
 {
   auto &verbose_ref = get_verbose();
-  verbose_ref = verbose;
+  verbose_ref       = verbose;
 }
 
 void set_header(bool header)
 {
   auto &header_ref = get_header();
-  header_ref = header;
+  header_ref       = header;
 }
 
 void set_do_fuzzing(bool do_fuzzing)
 {
   auto &do_fuzzing_ref = get_do_fuzzing();
-  do_fuzzing_ref = do_fuzzing;
+  do_fuzzing_ref       = do_fuzzing;
 }
 
 void set_test_one(const std::string &test_one)
 {
   auto &test_one_ref = get_test_one();
-  test_one_ref = test_one;
+  test_one_ref       = test_one;
 }
 
 void set_fuzz_one(const std::string &fuzz_one)
 {
   auto &fuzz_one_ref = get_fuzz_one();
-  fuzz_one_ref = fuzz_one;
+  fuzz_one_ref       = fuzz_one;
 }
 
 void set_seed(long unsigned int new_seed)
 {
   auto &seed = get_seed();
-  seed = new_seed;
+  seed       = new_seed;
 }
 
 char valfuzz_banner[] = "             _ _____              \n"
@@ -114,12 +114,12 @@ char valfuzz_banner[] = "             _ _____              \n"
 
 void print_header()
 {
-  bool verbose = get_verbose();
-  bool is_threaded = get_is_threaded();
-  bool do_fuzzing = get_do_fuzzing();
+  bool verbose       = get_verbose();
+  bool is_threaded   = get_is_threaded();
+  bool do_fuzzing    = get_do_fuzzing();
   bool do_benchmarks = get_do_benchmarks();
   long unsigned int max_num_threads = get_max_num_threads();
-  std::string reporter_id = get_reporter();
+  std::string reporter_id           = get_reporter();
   std::lock_guard<std::mutex> lock(get_stream_mutex());
   std::cout << valfuzz_banner;
   std::cout << "Settings:\n";
