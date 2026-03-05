@@ -14,7 +14,7 @@ std::deque<valfuzz::test_pair> &get_tests()
   return registered_tests;
 }
 
-long unsigned int get_num_tests()
+long long unsigned int get_num_tests()
 {
   auto &tests = get_tests();
   return tests.size();

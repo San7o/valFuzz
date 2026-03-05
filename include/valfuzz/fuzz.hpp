@@ -43,7 +43,7 @@ typedef std::function<void(std::string)> fuzz_function;
 typedef std::pair<std::string, fuzz_function> fuzz_pair;
 
 std::deque<fuzz_pair> &get_fuzzs();
-long unsigned int get_num_fuzz_tests();
+long long unsigned int get_num_fuzz_tests();
 std::atomic<long unsigned int> &get_iterations();
 std::mt19937 &get_random_engine();
 std::uniform_real_distribution<> &get_uniform_distribution();

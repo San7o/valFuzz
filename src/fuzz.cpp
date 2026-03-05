@@ -68,7 +68,7 @@ std::deque<fuzz_pair> &get_fuzzs()
   return registered_fuzzs;
 }
 
-long unsigned int get_num_fuzz_tests()
+long long unsigned int get_num_fuzz_tests()
 {
   auto &fuzzs = get_fuzzs();
   return fuzzs.size();

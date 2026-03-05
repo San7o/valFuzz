@@ -83,7 +83,7 @@ int &get_num_iterations_benchmark()
   return num_iterations_benchmark;
 }
 
-unsigned long get_num_benchmarks()
+long long unsigned int get_num_benchmarks()
 {
   auto &benchmarks = get_benchmarks();
   return benchmarks.size();

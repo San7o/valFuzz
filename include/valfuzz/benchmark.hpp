@@ -103,7 +103,7 @@ bool &get_do_benchmarks();
 int &get_num_iterations_benchmark();
 bool &get_run_one_benchmark();
 std::string &get_one_benchmark();
-unsigned long get_num_benchmarks();
+long long unsigned int get_num_benchmarks();
 std::deque<benchmark_pair> &get_benchmarks();
 std::atomic<bool> &get_save_to_file();
 std::ofstream &get_save_file();
